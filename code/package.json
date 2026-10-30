@@ -1,0 +1,12 @@
+{
+  "name": "calculator",
+  "version": "1.0.0",
+  "description": "A simple, responsive calculator web app (plain HTML, CSS and JavaScript)",
+  "private": true,
+  "main": "script.js",
+  "scripts": {
+    "test": "node --test tests/",
+    "start": "node -e \"console.log('Open index.html in a browser, or run: npx serve .')\""
+  },
+  "license": "MIT"
+}
