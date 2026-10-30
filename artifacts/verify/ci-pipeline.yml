@@ -1,0 +1,50 @@
+name: aidlc-verify
+
+on:
+  push:
+    branches: ['aidlc/rag']
+    paths: ['artifacts/verify/.aidlc-run-verify']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install -r code/requirements.txt pytest-cov
+
+      - name: Compile gate
+        working-directory: code
+        run: |
+          python -m compileall -q app tests
+          OPENAI_API_KEY=dummy python -c "from app.main import create_app, app_factory"
+
+      - name: Run unit tests with coverage
+        working-directory: code
+        run: |
+          mkdir -p ${{ github.workspace }}/artifacts/verify/coverage
+          python -m pytest tests -v \
+            --cov=app \
+            --cov-report=term \
+            --cov-report=xml:${{ github.workspace }}/artifacts/verify/coverage/coverage.xml \
+            --cov-report=json:${{ github.workspace }}/artifacts/verify/coverage/coverage.json \
+            --cov-report=html:${{ github.workspace }}/artifacts/verify/coverage \
+            --junitxml=${{ github.workspace }}/artifacts/verify/test-results.xml
+
+      - name: Commit coverage artifacts back to branch
+        continue-on-error: true
+        run: |
+          git config user.email "aidlc-ci@pipeline"
+          git config user.name "AIDLC CI"
+          git add artifacts/verify/
+          git commit -m "ci: publish verify artifacts [skip ci]" || echo "Nothing to commit"
+          git push origin "HEAD:${{ github.ref_name }}"
