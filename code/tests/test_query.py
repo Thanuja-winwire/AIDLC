@@ -23,11 +23,11 @@ def test_empty_store_returns_fixed_reply_without_llm(query, llm):
 
 def test_answer_with_sources(ingestion, query, llm):
     ingestion.ingest("pets.txt", b"Cats are small domestic animals that purr and sleep a lot.")
-    result = query.answer("What do cats do?")
+    result = query.answer("Do cats purr and sleep?")
     assert result.answer == llm.reply
     assert result.sources and result.sources[0].filename == "pets.txt"
     system, user = llm.calls[0]
-    assert "ONLY" in system and "[1]" in user and "What do cats do?" in user
+    assert "ONLY" in system and "[1]" in user and "Do cats purr and sleep?" in user
 
 
 def test_irrelevant_question_skips_llm(ingestion, query, llm):
