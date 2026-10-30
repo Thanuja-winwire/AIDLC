@@ -1,0 +1,40 @@
+name: aidlc-verify
+
+on:
+  push:
+    branches: ['aidlc/calculator']
+    paths: ['artifacts/verify/.aidlc-run-verify']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      # The project has zero dependencies (see code/package.json); c8 is fetched by npx for coverage only.
+      - name: Run unit tests with coverage
+        run: |
+          mkdir -p ${{ github.workspace }}/artifacts/verify/coverage
+          npx --yes c8 --reporter=text --reporter=json --reporter=html \
+            --report-dir=${{ github.workspace }}/artifacts/verify/coverage \
+            node --test \
+            --test-reporter=spec --test-reporter-destination=stdout \
+            --test-reporter=junit --test-reporter-destination=${{ github.workspace }}/artifacts/verify/test-results.xml \
+            code/tests/*.test.js
+
+      - name: Commit coverage artifacts back to branch
+        continue-on-error: true
+        run: |
+          git config user.email "aidlc-ci@pipeline"
+          git config user.name "AIDLC CI"
+          git add artifacts/verify/
+          git commit -m "ci: publish verify artifacts [skip ci]" || echo "Nothing to commit"
+          git push origin "HEAD:${{ github.ref_name }}"
