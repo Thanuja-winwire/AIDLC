@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+	<testcase name="basic operations" time="0.001193" classname="test"/>
+	<testcase name="left to right chaining" time="0.000250" classname="test"/>
+	<testcase name="decimals and floating point rounding" time="0.000272" classname="test"/>
+	<testcase name="percent" time="0.000158" classname="test"/>
+	<testcase name="division by zero and error recovery" time="0.000155" classname="test"/>
+	<testcase name="clear and delete" time="0.000125" classname="test"/>
+	<testcase name="operator replacement and equals with no operator" time="0.000082" classname="test"/>
+	<testcase name="digit limit" time="0.000104" classname="test"/>
+	<testcase name="result then new digit starts fresh; operator continues" time="0.000084" classname="test"/>
+	<testcase name="formatting" time="0.000166" classname="test"/>
+	<!-- tests 10 -->
+	<!-- suites 0 -->
+	<!-- pass 10 -->
+	<!-- fail 0 -->
+	<!-- cancelled 0 -->
+	<!-- skipped 0 -->
+	<!-- todo 0 -->
+	<!-- duration_ms 64.848127 -->
+</testsuites>
