@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RAG App · Ask your documents</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand">
+      <svg class="icon icon-lg" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4z"/></svg>
+      <span class="brand-name">DocuMind</span>
+      <span class="brand-tag">Ask your documents</span>
+    </div>
+    <div class="status" id="status" title="Checking service...">
+      <span class="status-dot" id="status-dot"></span>
+      <span id="status-text">Checking</span>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="panel" aria-labelledby="docs-title">
+      <h2 id="docs-title" class="panel-title">Documents</h2>
+
+      <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="Upload documents">
+        <svg class="icon icon-xl" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4m0 0l-4 4m4-4l4 4M4 16v3a1 1 0 001 1h14a1 1 0 001-1v-3"/></svg>
+        <p class="dz-title">Drag &amp; drop files here, or <span class="link">browse</span></p>
+        <p class="dz-hint">PDF, TXT or Markdown &middot; up to 20 MB each</p>
+        <input id="file-input" type="file" multiple accept=".pdf,.txt,.md" hidden>
+      </div>
+
+      <ul id="upload-rows" class="upload-rows" aria-live="polite"></ul>
+      <div id="doc-list" class="doc-list"></div>
+    </section>
+
+    <section class="panel" aria-labelledby="ask-title">
+      <h2 id="ask-title" class="panel-title">Ask</h2>
+      <form id="ask-form" class="ask-form">
+        <label for="question" class="sr-only">Your question</label>
+        <textarea id="question" rows="4" placeholder="e.g. What are the key findings in the report?" maxlength="2000"></textarea>
+        <div class="ask-actions">
+          <span class="kbd-hint">Ctrl/Cmd + Enter to send</span>
+          <button id="ask-btn" type="submit" class="btn btn-primary">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m0 0l-6-6m6 6l-6 6"/></svg>
+            Ask
+          </button>
+        </div>
+      </form>
+      <div id="answer-area" class="answer-area" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <div id="toasts" class="toasts" aria-live="polite"></div>
+  <script src="/static/app.js"></script>
+</body>
+</html>
