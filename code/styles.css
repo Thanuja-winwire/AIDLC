@@ -1,0 +1,125 @@
+:root {
+  --bg: #0f1220;
+  --bg-glow: #1d2145;
+  --card: #171a2e;
+  --display-bg: #0e1020;
+  --btn: #242842;
+  --btn-hover: #2d3252;
+  --text: #f1f3fb;
+  --muted: #9aa1c4;
+  --accent: #6c7bff;
+  --accent-hover: #8390ff;
+  --danger: #ff8a9b;
+  --error: #ff6b7d;
+  --error-bg: rgba(255, 107, 125, 0.08);
+  --gap: 12px;
+  --radius: 16px;
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body { margin: 0; }
+
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right))
+           max(16px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+  font-family: var(--font);
+  color: var(--text);
+  background: radial-gradient(circle at 50% 0%, var(--bg-glow), var(--bg) 60%);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.calculator {
+  width: min(100%, 380px);
+  padding: 20px;
+  background: var(--card);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 24px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45), 0 2px 0 rgba(255, 255, 255, 0.04) inset;
+}
+
+.display {
+  min-height: 104px;
+  margin-bottom: 20px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-end;
+  gap: 4px;
+  background: var(--display-bg);
+  border-radius: var(--radius);
+  border: 1px solid transparent;
+  overflow: hidden;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.expression {
+  min-height: 1.4em;
+  font-size: 1rem;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.result {
+  --fit: 1;
+  max-width: 100%;
+  font-size: calc(clamp(2.5rem, 11vw, 3rem) * var(--fit));
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  text-align: right;
+}
+
+.display.is-error { background: var(--error-bg); border-color: rgba(255, 107, 125, 0.35); }
+.display.is-error .result { color: var(--error); font-size: 1.5rem; letter-spacing: 0; }
+
+.keypad {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--gap);
+}
+
+.btn {
+  min-height: 44px;
+  aspect-ratio: 1 / 1;
+  padding: 0;
+  font: inherit;
+  font-size: clamp(1.1rem, 5vw, 1.25rem);
+  font-weight: 500;
+  color: var(--text);
+  background: var(--btn);
+  border: 0;
+  border-radius: var(--radius);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: background 0.15s, transform 0.08s;
+}
+
+.btn:hover { background: var(--btn-hover); }
+.btn:active, .btn.is-pressed { transform: scale(0.95); }
+.btn:focus-visible { outline: 3px solid var(--accent-hover); outline-offset: 2px; }
+
+.btn-op, .btn-equals { background: var(--accent); color: #fff; }
+.btn-op:hover, .btn-equals:hover { background: var(--accent-hover); }
+.btn-equals { background: linear-gradient(135deg, #6c7bff, #8b5cf6); }
+.btn-fn { color: var(--accent-hover); }
+.btn-danger { color: var(--danger); font-size: clamp(1rem, 4.4vw, 1.1rem); }
+.btn-zero { grid-column: span 2; aspect-ratio: auto; text-align: left; padding-left: 12%; }
+
+@media (max-width: 340px) {
+  .calculator { padding: 14px; }
+  :root { --gap: 8px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn, .display { transition: none; }
+}
