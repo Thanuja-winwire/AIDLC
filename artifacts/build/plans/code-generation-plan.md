@@ -12,7 +12,7 @@ Stories: none (User Stories stage skipped). Traceability is to specs.md requirem
 ## Steps
 - [x] **Step 1 - Foundation**: dependencies, config, errors, models, loaders, chunker, embeddings, LLM client, vector store, and their unit tests
 - [x] **Step 2 - Business logic and API**: IngestionService, QueryService, routers, app factory, and their unit tests
-- [ ] **Step 3 - Frontend**: static UI (index.html, styles.css, app.js) built to the Enterprise UI Baseline
+- [x] **Step 3 - Frontend**: static UI (index.html, styles.css, app.js) built to the Enterprise UI Baseline
 - [ ] **Step 4 - Documentation**: README, `.env.example`, unit summary
 
 ## File to User Story Map
