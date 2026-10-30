@@ -10,7 +10,7 @@ Stories: none (User Stories stage skipped). Traceability is to specs.md requirem
 - Dev wiring: the UI is served by the same FastAPI app on port 8000, so no proxy or CORS is needed. The UI calls the relative paths `/api/documents`, `/api/query` and `/health`.
 
 ## Steps
-- [ ] **Step 1 - Foundation**: dependencies, config, errors, models, loaders, chunker, embeddings, LLM client, vector store, and their unit tests
+- [x] **Step 1 - Foundation**: dependencies, config, errors, models, loaders, chunker, embeddings, LLM client, vector store, and their unit tests
 - [ ] **Step 2 - Business logic and API**: IngestionService, QueryService, routers, app factory, and their unit tests
 - [ ] **Step 3 - Frontend**: static UI (index.html, styles.css, app.js) built to the Enterprise UI Baseline
 - [ ] **Step 4 - Documentation**: README, `.env.example`, unit summary
