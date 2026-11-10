@@ -1,0 +1,66 @@
+name: aidlc-verify
+
+on:
+  push:
+    branches: ['aidlc/e-commerce-app']
+    paths: ['artifacts/verify/.aidlc-run-verify']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # ---------- Backend ----------
+      - name: Install backend dependencies
+        working-directory: code/backend
+        run: pip install -r requirements.txt pytest-cov
+
+      - name: Backend compile gate
+        working-directory: code/backend
+        run: python -m compileall app seed.py
+
+      - name: Backend tests with coverage
+        working-directory: code/backend
+        run: |
+          mkdir -p ${{ github.workspace }}/artifacts/verify/coverage
+          python -m pytest tests -v             --cov=app             --cov-report=term-missing             --cov-report=xml:${{ github.workspace }}/artifacts/verify/coverage/coverage.xml             --cov-report=json:${{ github.workspace }}/artifacts/verify/coverage/coverage.json             --cov-report=html:${{ github.workspace }}/artifacts/verify/coverage             --junitxml=${{ github.workspace }}/artifacts/verify/test-results.xml
+
+      # ---------- Frontend ----------
+      - name: Install frontend dependencies
+        working-directory: code/frontend
+        run: |
+          npm install
+          npm install --no-save @vitest/coverage-v8@1.6.0
+
+      - name: Frontend compile gate
+        working-directory: code/frontend
+        run: npm run build
+
+      - name: Frontend tests with coverage
+        working-directory: code/frontend
+        run: |
+          mkdir -p ${{ github.workspace }}/artifacts/verify/coverage/frontend
+          npx vitest run             --reporter=default --reporter=junit             --outputFile.junit=${{ github.workspace }}/artifacts/verify/frontend-test-results.xml             --coverage.enabled=true             --coverage.provider=v8             --coverage.reporter=text --coverage.reporter=json-summary --coverage.reporter=html             --coverage.reportsDirectory=${{ github.workspace }}/artifacts/verify/coverage/frontend
+
+      - name: Commit coverage artifacts back to branch
+        continue-on-error: true
+        run: |
+          git config user.email "aidlc-ci@pipeline"
+          git config user.name "AIDLC CI"
+          git add artifacts/verify/
+          git commit -m "ci: publish verify artifacts [skip ci]" || echo "Nothing to commit"
+          git pull --rebase origin "${{ github.ref_name }}" || true
+          git push origin "HEAD:${{ github.ref_name }}"
