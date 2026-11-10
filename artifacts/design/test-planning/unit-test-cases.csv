@@ -1,0 +1,63 @@
+ID,Linked Requirement,Title,Scenario,Preconditions,Test Data,Steps,Expected Result,Status
+UTC-01,—,Password hash round trip,Hash then verify,None,Passw0rdX,1. hash 2. verify,True,Not Run
+UTC-02,—,Wrong password rejected,Verify wrong password,None,Wrong123,1. hash 2. verify wrong,False,Not Run
+UTC-03,—,Malformed hash handled,Invalid hash,None,notahash,1. verify_password,False without exception,Not Run
+UTC-04,—,Token encode/decode,Create and decode JWT,None,user 1 customer,1. create 2. decode,sub 1 and role customer,Not Run
+UTC-05,—,Invalid token,Tampered token,None,abc.def.ghi,1. decode_token,None,Not Run
+UTC-06,—,Expired token,Expired token,Expiry patched,token,1. decode,None,Not Run
+UTC-07,—,Register valid,Valid RegisterIn,None,valid data,1. Instantiate,Created,Not Run
+UTC-08,—,Password too short,Under 8 chars,None,Ab1,1. Instantiate,ValidationError,Not Run
+UTC-09,—,Password too long,Over 72 chars,None,a1 x37,1. Instantiate,ValidationError,Not Run
+UTC-10,—,Password lacks digit/letter,Letters only or digits only,None,abcdefgh; 12345678,1. Instantiate,ValidationError,Not Run
+UTC-11,—,Invalid email,Malformed email,None,not-an-email,1. Instantiate,ValidationError,Not Run
+UTC-12,—,Empty name,Empty name,None,"",1. Instantiate,ValidationError,Not Run
+UTC-13,—,Profile update password rule,new_password validated,None,short,1. Instantiate,ValidationError; None allowed,Not Run
+UTC-14,—,ProductIn valid,Valid product,None,19.99/5,1. Instantiate,Created,Not Run
+UTC-15,—,Product price must be positive,Zero or negative price,None,0; -1,1. Instantiate,ValidationError,Not Run
+UTC-16,—,Product price decimals,More than 2 decimals,None,1.999,1. Instantiate,ValidationError,Not Run
+UTC-17,—,Product negative stock,Negative stock,None,-1,1. Instantiate,ValidationError,Not Run
+UTC-18,—,Image URL scheme,Non-http URL,None,ftp://x; empty,1. Instantiate,ftp rejected; empty accepted,Not Run
+UTC-19,—,Cart quantity bounds,1..99 only,None,0;1;99;100,1. Instantiate,0 and 100 rejected,Not Run
+UTC-20,—,Address valid,Valid address,None,fictional address,1. Instantiate,Created,Not Run
+UTC-21,—,Address postal code invalid,Bad postal code,None,12; 62@01,1. Instantiate,ValidationError,Not Run
+UTC-22,—,Phone validation,7-15 digits,None,123; abc1234567; empty; 5551234567,1. Instantiate,Invalid rejected; empty becomes None,Not Run
+UTC-23,—,Card number validation,16 digits strip spaces,None,4242 4242 4242 4242; 4242,1. Instantiate,Valid stripped; short rejected,Not Run
+UTC-24,—,Card expiry format,Invalid format,None,13/30; 1/30; 2030-01,1. Instantiate,ValidationError,Not Run
+UTC-25,—,Card expired,Past vs future expiry,None,01/20; 12/99,1. Instantiate,Past rejected; future accepted,Not Run
+UTC-26,—,CVC validation,3-4 digits,None,12;123;1234;12a,1. Instantiate,Only 3-4 digits accepted,Not Run
+UTC-27,—,StatusUpdateIn literal,Allowed statuses only,None,shipped; paid,1. Instantiate,paid rejected,Not Run
+UTC-28,—,Tax calculation,8% half-up,None,10.00; 0.06; 0.00,1. calc_tax,0.80; 0.00; 0.00,Not Run
+UTC-29,—,Tax rounding half-up,Exact half cent,None,0.0625,1. calc_tax,0.01,Not Run
+UTC-30,—,Cart view totals,Compute totals,Cart with 2 products,10.00x2; 5.50x1,1. build_cart_view,subtotal 25.50 tax 2.04 total 27.54 count 3,Not Run
+UTC-31,—,Cart view excludes inactive,Inactive flagged,Inactive product in cart,10.00x1,1. build_cart_view,unavailable True and excluded from totals,Not Run
+UTC-32,—,Get or create cart,Create once reuse,User without cart,user 1,1. call twice,Same cart,Not Run
+UTC-33,—,Add item new,Add active product,Stock 10,qty 2,1. add_item,Item qty 2,Not Run
+UTC-34,—,Add item merges,Increment existing,Cart qty 2,add 3,1. add_item,Qty 5,Not Run
+UTC-35,—,Add item missing/inactive,Unknown or inactive,id 999,—,1. add_item,DomainError 404,Not Run
+UTC-36,—,Add item over stock,Exceeds stock,Stock 3,qty 4,1. add_item,DomainError 409,Not Run
+UTC-37,—,Add item over 99,Exceeds 99,Stock 200 cart 98,add 2,1. add_item,DomainError 422,Not Run
+UTC-38,—,Update item qty,Within stock,Item exists,qty 4,1. update_item,Qty 4,Not Run
+UTC-39,—,Update item over stock,Above stock,Stock 3,qty 5,1. update_item,DomainError 409,Not Run
+UTC-40,—,Update/remove foreign item,Unknown item id,id 9999,—,1. update_item/remove_item,DomainError 404,Not Run
+UTC-41,—,Remove item,Remove one,2 items,item id,1. remove_item,Other remains,Not Run
+UTC-42,—,Clear cart,Remove all,Cart has items,—,1. clear,Empty and subtotal 0,Not Run
+UTC-43,—,Mock gateway success,Success card,None,4242424242424242,1. charge,success with mock_ reference,Not Run
+UTC-44,—,Mock gateway decline,Decline card,None,4000000000000002,1. charge,Card declined,Not Run
+UTC-45,—,Mock gateway invalid,Other card,None,4111111111111111,1. charge,Invalid test card,Not Run
+UTC-46,—,Place order success,Create order,Cart with stock,address,1. place_order,pending; stock reduced; cart empty,Not Run
+UTC-47,—,Place order empty cart,Empty cart,Empty cart,—,1. place_order,409 Cart is empty,Not Run
+UTC-48,—,Place order unavailable item,Inactive product,Inactive in cart,—,1. place_order,409,Not Run
+UTC-49,—,Place order insufficient stock,Stock too low,Stock lowered,—,1. place_order,409 and stock unchanged,Not Run
+UTC-50,—,Pay success,Pay pending,Pending order,4242424242424242,1. pay,paid and last4 4242,Not Run
+UTC-51,—,Pay declined,Declined,Pending order,4000000000000002,1. pay,payment_failed,Not Run
+UTC-52,—,Retry payment after failure,Retry,payment_failed order,success card,1. pay,paid,Not Run
+UTC-53,—,Pay invalid status,Paid or cancelled,Order paid,any card,1. pay,409,Not Run
+UTC-54,—,Order ownership,Other user's order,Order of A,user B,1. get/pay/cancel,404,Not Run
+UTC-55,—,List orders pagination,Own newest first,3 for A 1 for B,page 1 size 2,1. list_orders,total 3 and 2 items,Not Run
+UTC-56,—,Customer cancel restores stock,Cancel paid,Paid order,—,1. cancel_order,cancelled; restocked; refunded,Not Run
+UTC-57,—,Customer cancel not allowed,Shipped or delivered,Order shipped,—,1. cancel_order,409,Not Run
+UTC-58,—,Admin forward transitions,Forward flow,Paid order,—,1. admin_update_status,Each succeeds with event,Not Run
+UTC-59,—,Admin invalid transition,Skip or backward,Paid order,shipped; delivered,1. admin_update_status,409,Not Run
+UTC-60,—,Admin cancel,Allowed vs not,Various states,—,1. admin_update_status cancelled,Allowed cancel; delivered/cancelled 409,Not Run
+UTC-61,—,Admin list filter,Filter by status,Mixed orders,paid,1. admin_list_orders,Only paid,Not Run
+UTC-62,—,Admin get missing order,Unknown id,—,9999,1. admin_get_order,404,Not Run
