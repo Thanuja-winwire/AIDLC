@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites name="vitest tests" tests="8" failures="0" errors="0" time="1.032">
+    <testsuite name="src/__tests__/ui.test.jsx" timestamp="2026-11-10T08:33:37.145Z" hostname="runnervmwuk1x" tests="8" failures="0" errors="0" skipped="0" time="0.051">
+        <testcase classname="src/__tests__/ui.test.jsx" name="validators &gt; validates passwords" time="0.001">
+        </testcase>
+        <testcase classname="src/__tests__/ui.test.jsx" name="validators &gt; validates email" time="0.001">
+        </testcase>
+        <testcase classname="src/__tests__/ui.test.jsx" name="validators &gt; validates card" time="0.002">
+        </testcase>
+        <testcase classname="src/__tests__/ui.test.jsx" name="validators &gt; validates address" time="0">
+        </testcase>
+        <testcase classname="src/__tests__/ui.test.jsx" name="validators &gt; formats" time="0.012">
+        </testcase>
+        <testcase classname="src/__tests__/ui.test.jsx" name="ui kit &gt; renders badges and status" time="0.026">
+        </testcase>
+        <testcase classname="src/__tests__/ui.test.jsx" name="ui kit &gt; renders empty state" time="0.006">
+        </testcase>
+        <testcase classname="src/__tests__/ui.test.jsx" name="ui kit &gt; hides pagination for a single page" time="0.002">
+        </testcase>
+    </testsuite>
+</testsuites>
