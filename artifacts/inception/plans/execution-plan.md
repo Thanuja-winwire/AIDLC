@@ -41,7 +41,7 @@ Single-unit project (recorded explicitly): one repository with a FastAPI backend
 - [ ] NFR Requirements — `design:nfr_requirements` — optional — NFRs are already captured in the specification
 - [ ] NFR Design — `design:nfr_design` — optional — security and performance patterns are handled in functional design and code
 - [ ] Infrastructure Design — `design:infrastructure_design` — optional — local development only, no cloud infrastructure
-- [x] Figma Designs — `design:figma_designs` — optional — no Figma designs provided
+- [ ] Figma Designs — `design:figma_designs` — optional — Figma connector unavailable; skipped by user choice
 
 ### Build
 - [x] Code Generation — `build:code_generation` — required — generates the backend and frontend code
