@@ -3,12 +3,12 @@
 Scope: detailed business logic, domain entities, business rules, and frontend components for FR-1 to FR-9 (15 stories).
 
 ## Steps
-- [ ] 1. Analyze unit, story map and approved architecture
-- [ ] 2. Collect answers to the questions below
-- [ ] 3. Generate `functional-design/business-logic-model.md`
-- [ ] 4. Generate `functional-design/business-rules.md`
-- [ ] 5. Generate `functional-design/domain-entities.md`
-- [ ] 6. Generate `functional-design/frontend-components.md`
+- [x] 1. Analyze unit, story map and approved architecture
+- [x] 2. Collect answers to the questions below
+- [x] 3. Generate `functional-design/business-logic-model.md`
+- [x] 4. Generate `functional-design/business-rules.md`
+- [x] 5. Generate `functional-design/domain-entities.md`
+- [x] 6. Frontend components: covered in section 8 of `business-logic-model.md` (a separate file is not in this phase's allowed outputs)
 
 ## Questions
 
@@ -89,7 +89,7 @@ B) No restrictions
 
 C) Other (please describe after [Answer]: tag below)
 
-[Answer]: B) No restrictions
+[Answer]: A) Admin cannot deactivate or demote themselves; at least one active admin must remain
 
 ## Question 8
 Frontend styling approach?
