@@ -3,12 +3,12 @@
 **Scope**: single unit (FastAPI backend + React frontend). Source: `specs.md`, `stories.md`, `unit-of-work.md`.
 
 ## Checklist
-- [ ] Generate components.md
-- [ ] Generate component-methods.md
-- [ ] Generate services.md
-- [ ] Generate component-dependency.md
-- [ ] Generate app-architecture.md (consolidated)
-- [ ] Validate design completeness and consistency
+- [x] Generate components.md
+- [x] Generate component-methods.md
+- [x] Generate services.md
+- [x] Generate component-dependency.md
+- [x] Generate app-architecture.md (consolidated)
+- [x] Validate design completeness and consistency
 
 ## Questions
 
