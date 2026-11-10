@@ -1,0 +1,45 @@
+name: aidlc-qa
+
+on:
+  push:
+    branches: ['aidlc/e-commerce-app']
+    paths: ['artifacts/verify/winwire-qa-test/.aidlc-run-qa']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  qa-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install -r code/backend/requirements.txt pytest-cov
+
+      - name: Run QA agent tests with coverage
+        continue-on-error: true
+        run: |
+          mkdir -p artifacts/verify/winwire-qa-test
+          pytest code/QA-Agent-Test/ -v --cov=code/backend/app --cov-report=json:artifacts/verify/winwire-qa-test/coverage.json --junitxml=artifacts/verify/winwire-qa-test/test-results.xml
+
+      - name: Commit QA test results back to branch
+        if: ${{ !cancelled() }}
+        continue-on-error: true
+        run: |
+          git config user.email "aidlc-ci@pipeline"
+          git config user.name "AIDLC CI"
+          echo "${{ github.run_id }}" > artifacts/verify/winwire-qa-test/last-run-id.txt
+          git add artifacts/verify/winwire-qa-test/
+          git commit -m "ci: publish QA agent test results [skip ci]" || echo "Nothing to commit"
+          pushed=0
+          for i in 1 2 3; do
+            git fetch origin "${{ github.ref_name }}" && { git rebase FETCH_HEAD || { git rebase --abort; false; }; } && git push origin "HEAD:${{ github.ref_name }}" && { pushed=1; break; }
+            echo "push attempt $i failed - retrying"; sleep 5
+          done
+          [ "$pushed" = 1 ]
