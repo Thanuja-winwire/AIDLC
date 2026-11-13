@@ -1,0 +1,95 @@
+name: aidlc-verify
+
+on:
+  push:
+    branches: ['aidlc/inventory-management-1']
+    paths: ['artifacts/verify/.aidlc-run-verify']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install backend dependencies
+        run: pip install -r code/backend/requirements.txt pytest-cov
+
+      - name: Install frontend dependencies
+        working-directory: code/frontend
+        run: |
+          npm install
+          npm install --no-save @vitest/coverage-v8@^2.0.5
+
+      - name: Frontend compile gate (tsc + vite build)
+        working-directory: code/frontend
+        run: npm run build
+
+      - name: Backend tests with coverage (pytest)
+        if: ${{ !cancelled() }}
+        working-directory: code/backend
+        run: |
+          mkdir -p ${{ github.workspace }}/artifacts/verify/coverage/backend
+          pytest -v             --cov=app             --cov-report=term-missing             --cov-report=xml:${{ github.workspace }}/artifacts/verify/coverage/backend/coverage.xml             --cov-report=json:${{ github.workspace }}/artifacts/verify/coverage/backend/coverage.json             --cov-report=html:${{ github.workspace }}/artifacts/verify/coverage/backend/html             --junitxml=${{ github.workspace }}/artifacts/verify/test-results-backend.xml
+
+      - name: Frontend tests with coverage (vitest)
+        if: ${{ !cancelled() }}
+        working-directory: code/frontend
+        run: |
+          mkdir -p ${{ github.workspace }}/artifacts/verify/coverage/frontend
+          npx vitest run             --reporter=default --reporter=junit             --outputFile.junit=${{ github.workspace }}/artifacts/verify/test-results-frontend.xml             --coverage.enabled --coverage.provider=v8             --coverage.reportsDirectory=${{ github.workspace }}/artifacts/verify/coverage/frontend             --coverage.reporter=json --coverage.reporter=json-summary             --coverage.reporter=lcov --coverage.reporter=html
+
+      - name: SonarQube - create project (if missing)
+        if: ${{ !cancelled() }}
+        continue-on-error: true
+        env:
+          SONAR_TOKEN: ${{ secrets.AIDLC_SONAR_TOKEN_1526C }}
+          SONAR_HOST_URL: ${{ vars.AIDLC_SONAR_HOST_URL_1526C }}
+          SONAR_ORG: ${{ vars.AIDLC_SONAR_ORG_1526C }}
+          SONAR_PROJECT_KEY: ${{ vars.AIDLC_SONAR_PROJECT_KEY_1526C }}
+        run: |
+          code=$(curl -sS -o "${{ runner.temp }}/sonar-create.json" -w "%{http_code}" -X POST             -H "Authorization: Bearer $SONAR_TOKEN"             --data-urlencode "organization=$SONAR_ORG"             --data-urlencode "project=$SONAR_PROJECT_KEY"             --data-urlencode "name=$SONAR_PROJECT_KEY"             --data-urlencode "visibility=private"             "$SONAR_HOST_URL/api/projects/create")
+          echo "api/projects/create -> HTTP $code"; cat "${{ runner.temp }}/sonar-create.json"; echo
+
+      - name: SonarQube - scan
+        if: ${{ !cancelled() }}
+        continue-on-error: true
+        working-directory: code
+        env:
+          SONAR_TOKEN: ${{ secrets.AIDLC_SONAR_TOKEN_1526C }}
+          SONAR_HOST_URL: ${{ vars.AIDLC_SONAR_HOST_URL_1526C }}
+          SONAR_ORG: ${{ vars.AIDLC_SONAR_ORG_1526C }}
+          SONAR_PROJECT_KEY: ${{ vars.AIDLC_SONAR_PROJECT_KEY_1526C }}
+        run: |
+          npx --yes @sonar/scan@5.0.2             -Dsonar.host.url="$SONAR_HOST_URL"             -Dsonar.organization="$SONAR_ORG"             -Dsonar.projectKey="$SONAR_PROJECT_KEY"             -Dsonar.sources=backend/app,frontend/src             -Dsonar.tests=backend/tests,frontend/src/test             -Dsonar.exclusions="**/node_modules/**,**/dist/**,**/build/**,**/coverage/**,**/*.test.*,**/*.spec.*,**/alembic/**"             -Dsonar.test.inclusions="**/*.test.*,**/*.spec.*,backend/tests/**"             -Dsonar.python.version=3.11             -Dsonar.python.coverage.reportPaths=${{ github.workspace }}/artifacts/verify/coverage/backend/coverage.xml             -Dsonar.javascript.lcov.reportPaths=${{ github.workspace }}/artifacts/verify/coverage/frontend/lcov.info
+
+      - name: SonarQube - export results
+        if: ${{ !cancelled() }}
+        continue-on-error: true
+        env:
+          SONAR_TOKEN: ${{ secrets.AIDLC_SONAR_TOKEN_1526C }}
+          SONAR_HOST_URL: ${{ vars.AIDLC_SONAR_HOST_URL_1526C }}
+          SONAR_ORG: ${{ vars.AIDLC_SONAR_ORG_1526C }}
+        run: |
+          python3 artifacts/verify/sonar/sonar-export.py             --report-task "${{ github.workspace }}"             --out artifacts/verify/sonar/sonar-issues.json
+
+      - name: Commit coverage artifacts back to branch
+        if: ${{ !cancelled() }}
+        continue-on-error: true
+        run: |
+          git config user.email "aidlc-ci@pipeline"
+          git config user.name "AIDLC CI"
+          git add artifacts/verify/
+          git commit -m "ci: publish verify artifacts [skip ci]" || echo "Nothing to commit"
+          git push origin "HEAD:${{ github.ref_name }}"
