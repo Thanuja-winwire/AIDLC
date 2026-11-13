@@ -1,18 +1,10 @@
 from datetime import datetime
 from typing import Iterator
 
-from sqlalchemy import DateTime, Sequence, create_engine, func
+from sqlalchemy import DateTime, create_engine, func
 from sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column, sessionmaker
 
 from app.core.config import settings
-
-engine = create_engine(settings.database_url, pool_pre_ping=True)
-SessionLocal = sessionmaker(bind=engine, autoflush=False, expire_on_commit=False)
-
-# Document number sequences (see numbering service)
-po_number_seq = Sequence("po_number_seq")
-so_number_seq = Sequence("so_number_seq")
-tr_number_seq = Sequence("tr_number_seq")
 
 
 class Base(DeclarativeBase):
@@ -27,8 +19,20 @@ class TimestampMixin:
     )
 
 
-def get_session() -> Iterator[Session]:
-    """One transaction per request: commit on success, roll back on any error."""
+def make_engine(url: str | None = None):
+    url = url or settings.database_url
+    kwargs = {"pool_pre_ping": True}
+    if url.startswith("sqlite"):
+        kwargs = {"connect_args": {"check_same_thread": False}}
+    return create_engine(url, **kwargs)
+
+
+engine = make_engine()
+SessionLocal = sessionmaker(bind=engine, autoflush=False, expire_on_commit=False)
+
+
+def get_db() -> Iterator[Session]:
+    """One session (and one transaction) per request: commit on success, roll back on error."""
     session = SessionLocal()
     try:
         yield session
