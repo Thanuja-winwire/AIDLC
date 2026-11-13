@@ -8,7 +8,7 @@ class Supplier(TimestampMixin, Base):
     __tablename__ = "suppliers"
 
     name: Mapped[str] = mapped_column(String(200), index=True)
-    contact_person: Mapped[str | None] = mapped_column(String(160), nullable=True)
+    contact_person: Mapped[str | None] = mapped_column(String(200), nullable=True)
     email: Mapped[str | None] = mapped_column(String(255), nullable=True)
     phone: Mapped[str | None] = mapped_column(String(64), nullable=True)
     address: Mapped[str | None] = mapped_column(Text, nullable=True)
