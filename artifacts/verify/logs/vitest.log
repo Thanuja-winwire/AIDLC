@@ -2,32 +2,16 @@
 [1m[7m[36m RUN [39m[27m[22m [36mv2.1.9 [39m[90m/home/runner/work/AIDLC/AIDLC/code/frontend[39m
       [2mCoverage enabled with [22m[33mv8[39m
 
- [32m✓[39m src/test/RoleGate.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[90m 36[2mms[22m[39m
+ [32m✓[39m src/test/RoleGate.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[90m 28[2mms[22m[39m
 [90mstderr[2m | src/test/LoginPage.test.tsx[2m > [22m[2mLoginPage[2m > [22m[2msubmits trimmed credentials
 [22m[39m⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.
 ⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.
 
- [31m❯[39m src/test/LoginPage.test.tsx [2m([22m[2m2 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[90m 143[2mms[22m[39m
-[31m   [31m×[31m LoginPage[2m > [22mshows the server error on failure[90m 33[2mms[22m[31m[39m
-[31m     → Invalid email or password[39m
+ [32m✓[39m src/test/LoginPage.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[90m 121[2mms[22m[39m
 
-[31m⎯⎯⎯⎯⎯⎯⎯[1m[7m Failed Tests 1 [27m[22m⎯⎯⎯⎯⎯⎯⎯[39m
-
-[31m[1m[7m FAIL [27m[22m[39m src/test/LoginPage.test.tsx[2m > [22mLoginPage[2m > [22mshows the server error on failure
-[31m[1mError[22m: Invalid email or password[39m
-[36m [2m❯[22m Object.then src/test/LoginPage.test.tsx:[2m25:64[22m[39m
-    [90m 23| [39m    [90m// Thenable, not a real Promise: vitest's mock result tracking can[39m…
-    [90m 24| [39m    login[33m.[39m[34mmockImplementation[39m(() [33m=>[39m ({
-    [90m 25| [39m      then[33m:[39m (_ok[33m:[39m unknown[33m,[39m fail[33m:[39m (e[33m:[39m unknown) [33m=>[39m [35mvoid[39m) [33m=>[39m [34mfail[39m([35mnew[39m [33mErr[39m…
-    [90m   | [39m                                                               [31m^[39m
-    [90m 26| [39m    }))[33m;[39m
-    [90m 27| [39m    [35mconst[39m { container } [33m=[39m [34mrender[39m([33m<[39m[33mMemoryRouter[39m[33m>[39m[33m<[39m[33mLoginPage[39m [33m/[39m[33m>[39m[33m<[39m[33m/[39m[33mMemoryRo[39m…
-
-[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
-
-[2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m1 passed[39m[22m[90m (2)[39m
-[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m4 passed[39m[22m[90m (5)[39m
-[2m   Start at [22m 10:04:04
-[2m   Duration [22m 2.01s[2m (transform 176ms, setup 205ms, collect 640ms, tests 179ms, environment 928ms, prepare 156ms)[22m
+[2m Test Files [22m [1m[32m2 passed[39m[22m[90m (2)[39m
+[2m      Tests [22m [1m[32m5 passed[39m[22m[90m (5)[39m
+[2m   Start at [22m 10:07:33
+[2m   Duration [22m 1.65s[2m (transform 147ms, setup 180ms, collect 517ms, tests 150ms, environment 796ms, prepare 128ms)[22m
 
 JUNIT report written to /home/runner/work/AIDLC/AIDLC/artifacts/verify/test-results-frontend.xml
