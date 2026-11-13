@@ -1,6 +1,6 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import LoginPage from "../pages/LoginPage";
 
 const login = vi.fn();
@@ -8,6 +8,7 @@ vi.mock("../auth/AuthContext", () => ({ useAuth: () => ({ user: null, login }) }
 
 describe("LoginPage", () => {
   beforeEach(() => login.mockReset());
+  afterEach(() => cleanup());
 
   it("submits trimmed credentials", async () => {
     login.mockResolvedValue(undefined);
@@ -19,7 +20,7 @@ describe("LoginPage", () => {
   });
 
   it("shows the server error on failure", async () => {
-    login.mockRejectedValue(new Error("Invalid email or password"));
+    login.mockImplementation(() => Promise.reject(new Error("Invalid email or password")));
     render(<MemoryRouter><LoginPage /></MemoryRouter>);
     fireEvent.change(screen.getByLabelText("Email"), { target: { value: "a@b.co" } });
     fireEvent.change(screen.getByLabelText("Password"), { target: { value: "bad" } });
