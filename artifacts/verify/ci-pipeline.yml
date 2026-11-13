@@ -32,9 +32,20 @@ jobs:
           npm install
           npm install --no-save @vitest/coverage-v8@^2.0.5
 
-      - name: Frontend compile gate (tsc + vite build)
+      - name: Frontend compile gate - tsc (typecheck)
         working-directory: code/frontend
-        run: npm run build
+        run: |
+          mkdir -p ${{ github.workspace }}/artifacts/verify/logs
+          set -o pipefail
+          npx tsc --noEmit 2>&1 | tee ${{ github.workspace }}/artifacts/verify/logs/tsc.log
+
+      - name: Frontend compile gate - vite build
+        if: ${{ !cancelled() }}
+        working-directory: code/frontend
+        run: |
+          mkdir -p ${{ github.workspace }}/artifacts/verify/logs
+          set -o pipefail
+          npx vite build 2>&1 | tee ${{ github.workspace }}/artifacts/verify/logs/vite-build.log
 
       - name: Backend tests with coverage (pytest)
         if: ${{ !cancelled() }}
@@ -47,8 +58,9 @@ jobs:
         if: ${{ !cancelled() }}
         working-directory: code/frontend
         run: |
-          mkdir -p ${{ github.workspace }}/artifacts/verify/coverage/frontend
-          npx vitest run             --reporter=default --reporter=junit             --outputFile.junit=${{ github.workspace }}/artifacts/verify/test-results-frontend.xml             --coverage.enabled --coverage.provider=v8             --coverage.reportsDirectory=${{ github.workspace }}/artifacts/verify/coverage/frontend             --coverage.reporter=json --coverage.reporter=json-summary             --coverage.reporter=lcov --coverage.reporter=html
+          mkdir -p ${{ github.workspace }}/artifacts/verify/coverage/frontend ${{ github.workspace }}/artifacts/verify/logs
+          set -o pipefail
+          npx vitest run             --reporter=default --reporter=junit             --outputFile.junit=${{ github.workspace }}/artifacts/verify/test-results-frontend.xml             --coverage.enabled --coverage.provider=v8             --coverage.reportsDirectory=${{ github.workspace }}/artifacts/verify/coverage/frontend             --coverage.reporter=json --coverage.reporter=json-summary             --coverage.reporter=lcov --coverage.reporter=html 2>&1 | tee ${{ github.workspace }}/artifacts/verify/logs/vitest.log
 
       - name: SonarQube - create project (if missing)
         if: ${{ !cancelled() }}
