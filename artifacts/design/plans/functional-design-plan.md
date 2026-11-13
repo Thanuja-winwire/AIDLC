@@ -4,12 +4,12 @@
 Detailed business logic, domain entities, business rules and frontend components for FR-1 to FR-11 (see `specs.md`, `app-architecture.md`).
 
 ## Steps
-- [ ] Analyze unit context and architecture
-- [ ] Collect answers to the questions below
-- [ ] Generate `functional-design/business-logic-model.md`
-- [ ] Generate `functional-design/business-rules.md`
-- [ ] Generate `functional-design/domain-entities.md`
-- [ ] Generate `functional-design/frontend-components.md`
+- [x] Analyze unit context and architecture
+- [x] Collect answers to the questions below
+- [x] Generate `functional-design/business-logic-model.md`
+- [x] Generate `functional-design/business-rules.md`
+- [x] Generate `functional-design/domain-entities.md`
+- [x] Generate `functional-design/frontend-components.md`
 
 ## Questions
 
