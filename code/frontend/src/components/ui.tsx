@@ -75,7 +75,7 @@ export function Textarea({ label, error, hint, id, ...rest }: FieldProps & Texta
 }
 
 /* ---------- Layout bits ---------- */
-export function Card({ children, className }: { children: ReactNode; className?: string }) {
+export function Card({ children, className }: { children?: ReactNode; className?: string }) {
   return <div className={cx("rounded-xl border border-slate-200 bg-white shadow-card", className)}>{children}</div>;
 }
 
