@@ -4,16 +4,18 @@ from sqlalchemy import CheckConstraint, Enum, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.db import Base, TimestampMixin
+from app.models.catalog import Product
+from app.models.inventory import Location
 
 
 class StockTransfer(TimestampMixin, Base):
     __tablename__ = "stock_transfers"
     __table_args__ = (
-        CheckConstraint("quantity > 0", name="ck_transfer_qty"),
-        CheckConstraint("from_location_id <> to_location_id", name="ck_transfer_distinct"),
+        CheckConstraint("quantity > 0", name="ck_transfer_qty_pos"),
+        CheckConstraint("from_location_id <> to_location_id", name="ck_transfer_distinct_locations"),
     )
 
-    number: Mapped[str] = mapped_column(String(32), unique=True)
+    number: Mapped[str] = mapped_column(String(32), unique=True, index=True)
     product_id: Mapped[int] = mapped_column(ForeignKey("products.id"), index=True)
     from_location_id: Mapped[int] = mapped_column(ForeignKey("locations.id"))
     to_location_id: Mapped[int] = mapped_column(ForeignKey("locations.id"))
@@ -21,9 +23,9 @@ class StockTransfer(TimestampMixin, Base):
     note: Mapped[str | None] = mapped_column(Text, nullable=True)
     created_by: Mapped[int] = mapped_column(ForeignKey("users.id"))
 
-    product = relationship("Product")
-    from_location = relationship("Location", foreign_keys=[from_location_id])
-    to_location = relationship("Location", foreign_keys=[to_location_id])
+    product: Mapped[Product] = relationship()
+    from_location: Mapped[Location] = relationship(foreign_keys=[from_location_id])
+    to_location: Mapped[Location] = relationship(foreign_keys=[to_location_id])
 
 
 class AdjustmentMode(str, enum.Enum):
@@ -43,7 +45,7 @@ class StockAdjustment(TimestampMixin, Base):
     __tablename__ = "stock_adjustments"
 
     product_id: Mapped[int] = mapped_column(ForeignKey("products.id"), index=True)
-    location_id: Mapped[int] = mapped_column(ForeignKey("locations.id"))
+    location_id: Mapped[int] = mapped_column(ForeignKey("locations.id"), index=True)
     mode: Mapped[AdjustmentMode] = mapped_column(Enum(AdjustmentMode, name="adjustment_mode"))
     delta: Mapped[int] = mapped_column(Integer)
     counted_quantity: Mapped[int | None] = mapped_column(Integer, nullable=True)
@@ -51,5 +53,5 @@ class StockAdjustment(TimestampMixin, Base):
     note: Mapped[str | None] = mapped_column(Text, nullable=True)
     created_by: Mapped[int] = mapped_column(ForeignKey("users.id"))
 
-    product = relationship("Product")
-    location = relationship("Location")
+    product: Mapped[Product] = relationship()
+    location: Mapped[Location] = relationship()
