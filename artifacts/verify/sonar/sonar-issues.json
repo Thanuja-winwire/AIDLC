@@ -4,11 +4,11 @@
   "organization": "thanuja-ai-dlc",
   "dashboard_url": "https://sonarcloud.io/dashboard?id=thanuja-ai-dlc_aidlc-inventory-management-1-1526cf66&branch=aidlc%2Finventory-management-1&resolved=false",
   "analysis": {
-    "ce_task_id": "AaHUAVBmuJgu9kuJo9fG",
+    "ce_task_id": "AaHUCcD-zJfbO9Q5oYFk",
     "status": "SUCCESS",
-    "processing_seconds": 0.3,
-    "analysis_id": "8673798f-fa45-464e-bb45-c2b6808a2681",
-    "executed_at": "2026-11-13T08:23:40+0000"
+    "processing_seconds": 0.4,
+    "analysis_id": "7c0eb9d5-f6a7-4972-b8a7-dfb86bd08e78",
+    "executed_at": "2026-11-13T08:32:52+0000"
   },
   "summary": {
     "total_issues": 0,
