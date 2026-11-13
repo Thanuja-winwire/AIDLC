@@ -21,10 +21,18 @@ describe("LoginPage", () => {
 
   it("shows the server error on failure", async () => {
     login.mockImplementation(() => Promise.reject(new Error("Invalid email or password")));
-    render(<MemoryRouter><LoginPage /></MemoryRouter>);
+    const { container } = render(<MemoryRouter><LoginPage /></MemoryRouter>);
     fireEvent.change(screen.getByLabelText("Email"), { target: { value: "a@b.co" } });
     fireEvent.change(screen.getByLabelText("Password"), { target: { value: "bad" } });
-    fireEvent.click(screen.getByRole("button", { name: /sign in/i }));
-    expect(await screen.findByRole("alert")).toHaveTextContent("Invalid email or password");
+    fireEvent.submit(screen.getByRole("form", { name: /sign in form/i }));
+    try {
+      const alert = await screen.findByRole("alert");
+      expect(alert).toHaveTextContent("Invalid email or password");
+    } catch (e) {
+      // DIAGNOSTICS
+      console.log("DIAG login calls:", JSON.stringify(login.mock.calls));
+      console.log("DIAG DOM:", container.innerHTML);
+      throw e;
+    }
   });
 });
