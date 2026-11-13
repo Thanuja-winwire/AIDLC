@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuites name="vitest tests" tests="5" failures="0" errors="0" time="1.652">
-    <testsuite name="src/test/LoginPage.test.tsx" timestamp="2026-11-13T10:07:35.736Z" hostname="runnervmwuk1x" tests="2" failures="0" errors="0" skipped="0" time="0.121223506">
-        <testcase classname="src/test/LoginPage.test.tsx" name="LoginPage &gt; submits trimmed credentials" time="0.093479336">
+<testsuites name="vitest tests" tests="5" failures="0" errors="0" time="1.888">
+    <testsuite name="src/test/LoginPage.test.tsx" timestamp="2026-11-13T10:17:43.842Z" hostname="runnervmwuk1x" tests="2" failures="0" errors="0" skipped="0" time="0.135213096">
+        <testcase classname="src/test/LoginPage.test.tsx" name="LoginPage &gt; submits trimmed credentials" time="0.107036456">
             <system-err>
 ⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.
 ⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.
 
             </system-err>
         </testcase>
-        <testcase classname="src/test/LoginPage.test.tsx" name="LoginPage &gt; shows the server error on failure" time="0.026214634">
+        <testcase classname="src/test/LoginPage.test.tsx" name="LoginPage &gt; shows the server error on failure" time="0.026325951">
         </testcase>
     </testsuite>
-    <testsuite name="src/test/RoleGate.test.tsx" timestamp="2026-11-13T10:07:35.737Z" hostname="runnervmwuk1x" tests="3" failures="0" errors="0" skipped="0" time="0.028324754">
-        <testcase classname="src/test/RoleGate.test.tsx" name="RoleGate &gt; hides admin-only content from Staff" time="0.020646665">
+    <testsuite name="src/test/RoleGate.test.tsx" timestamp="2026-11-13T10:17:43.844Z" hostname="runnervmwuk1x" tests="3" failures="0" errors="0" skipped="0" time="0.035872312">
+        <testcase classname="src/test/RoleGate.test.tsx" name="RoleGate &gt; hides admin-only content from Staff" time="0.026314158">
         </testcase>
-        <testcase classname="src/test/RoleGate.test.tsx" name="RoleGate &gt; shows admin-only content to Admins" time="0.004470607">
+        <testcase classname="src/test/RoleGate.test.tsx" name="RoleGate &gt; shows admin-only content to Admins" time="0.006010957">
         </testcase>
-        <testcase classname="src/test/RoleGate.test.tsx" name="RoleGate &gt; renders the fallback for Staff when given" time="0.001779784">
+        <testcase classname="src/test/RoleGate.test.tsx" name="RoleGate &gt; renders the fallback for Staff when given" time="0.002051332">
         </testcase>
     </testsuite>
 </testsuites>
