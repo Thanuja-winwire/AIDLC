@@ -1,22 +1,30 @@
 import csv
 import io
-from typing import Iterable, Iterator, Sequence
+from typing import Iterable, Sequence
+
+from fastapi.responses import StreamingResponse
+
+_FORMULA_PREFIXES = ("=", "+", "-", "@", "\t", "\r")
 
 
-def _sanitize(value: object) -> object:
-    # Neutralize spreadsheet formula injection
-    if isinstance(value, str) and value[:1] in ("=", "+", "-", "@"):
+def _safe(value) -> str:
+    """Neutralise spreadsheet formula injection for text cells."""
+    if value is None:
+        return ""
+    if isinstance(value, str) and value.startswith(_FORMULA_PREFIXES):
         return "'" + value
-    return value
+    return str(value)
 
 
-def rows_to_csv(header: Sequence[str], rows: Iterable[Sequence[object]]) -> Iterator[str]:
+def csv_response(filename: str, header: Sequence[str], rows: Iterable[Sequence]) -> StreamingResponse:
     buffer = io.StringIO()
     writer = csv.writer(buffer)
     writer.writerow(header)
-    yield buffer.getvalue()
     for row in rows:
-        buffer.seek(0)
-        buffer.truncate(0)
-        writer.writerow([_sanitize(v) for v in row])
-        yield buffer.getvalue()
+        writer.writerow([_safe(v) for v in row])
+    buffer.seek(0)
+    return StreamingResponse(
+        iter([buffer.getvalue()]),
+        media_type="text/csv",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+    )
