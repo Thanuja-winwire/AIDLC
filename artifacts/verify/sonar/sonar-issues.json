@@ -1,0 +1,29 @@
+{
+  "status": "OK",
+  "project_key": "thanuja-ai-dlc_aidlc-inventory-management-1-1526cf66",
+  "organization": "thanuja-ai-dlc",
+  "dashboard_url": "https://sonarcloud.io/dashboard?id=thanuja-ai-dlc_aidlc-inventory-management-1-1526cf66&branch=aidlc%2Finventory-management-1&resolved=false",
+  "analysis": {
+    "ce_task_id": "AaHUAVBmuJgu9kuJo9fG",
+    "status": "SUCCESS",
+    "processing_seconds": 0.3,
+    "analysis_id": "8673798f-fa45-464e-bb45-c2b6808a2681",
+    "executed_at": "2026-11-13T08:23:40+0000"
+  },
+  "summary": {
+    "total_issues": 0,
+    "exported_issues": 0,
+    "by_severity": {},
+    "must_fix": 0,
+    "verdict": "PASS",
+    "rule": "FAIL when any issue has BLOCKER/HIGH impact (or legacy BLOCKER/CRITICAL severity)"
+  },
+  "measures": {},
+  "quality_gate": {
+    "status": "UNKNOWN",
+    "error": "GET api/qualitygates/project_status failed: HTTP 403: {\"errors\":[{\"msg\":\"Organization is not allowed to access data from non main branches.\"}]}",
+    "conditions": []
+  },
+  "files": [],
+  "rules": {}
+}
