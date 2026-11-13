@@ -16,16 +16,15 @@ class Category(TimestampMixin, Base):
 class Product(TimestampMixin, Base):
     __tablename__ = "products"
     __table_args__ = (
-        CheckConstraint("reorder_level >= 0", name="ck_product_reorder"),
-        CheckConstraint("unit_cost >= 0", name="ck_product_cost"),
-        CheckConstraint("sale_price >= 0", name="ck_product_price"),
+        CheckConstraint("reorder_level >= 0", name="ck_product_reorder_nonneg"),
+        CheckConstraint("unit_cost >= 0 AND sale_price >= 0", name="ck_product_money_nonneg"),
     )
 
     sku: Mapped[str] = mapped_column(String(64), unique=True, index=True)
     name: Mapped[str] = mapped_column(String(200), index=True)
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
     category_id: Mapped[int | None] = mapped_column(ForeignKey("categories.id"), nullable=True)
-    unit_of_measure: Mapped[str] = mapped_column(String(32), default="each")
+    unit_of_measure: Mapped[str] = mapped_column(String(32), default="unit")
     unit_cost: Mapped[Decimal] = mapped_column(Numeric(12, 2), default=0)
     sale_price: Mapped[Decimal] = mapped_column(Numeric(12, 2), default=0)
     reorder_level: Mapped[int] = mapped_column(Integer, default=0)
