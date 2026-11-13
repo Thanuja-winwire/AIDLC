@@ -18,11 +18,16 @@ def verify_password(password: str, password_hash: str) -> bool:
 
 
 def create_access_token(user_id: int, role: str) -> str:
-    expires = datetime.now(timezone.utc) + timedelta(minutes=settings.access_token_minutes)
-    payload = {"sub": str(user_id), "role": role, "exp": expires}
+    now = datetime.now(timezone.utc)
+    payload = {
+        "sub": str(user_id),
+        "role": role,
+        "iat": now,
+        "exp": now + timedelta(minutes=settings.jwt_expire_minutes),
+    }
     return jwt.encode(payload, settings.jwt_secret, algorithm=settings.jwt_algorithm)
 
 
 def decode_access_token(token: str) -> dict:
-    """Raises jwt.PyJWTError on invalid or expired tokens."""
+    """Raises jwt.PyJWTError when the token is invalid or expired."""
     return jwt.decode(token, settings.jwt_secret, algorithms=[settings.jwt_algorithm])
