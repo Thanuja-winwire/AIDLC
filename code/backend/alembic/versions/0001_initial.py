@@ -1,7 +1,7 @@
 """initial schema
 
-Creates all tables, constraints and the PO/SO/TR number sequences from the
-model metadata. Later schema changes must be added as explicit migrations.
+Creates every table from the current model metadata and the PO/SO/TR number
+sequences. This is the baseline revision; later changes must be explicit revisions.
 """
 from alembic import op
 
@@ -13,10 +13,20 @@ down_revision = None
 branch_labels = None
 depends_on = None
 
+SEQUENCES = ("po_number_seq", "so_number_seq", "tr_number_seq")
+
 
 def upgrade() -> None:
-    Base.metadata.create_all(bind=op.get_bind())
+    bind = op.get_bind()
+    Base.metadata.create_all(bind=bind)
+    if bind.dialect.name == "postgresql":
+        for seq in SEQUENCES:
+            op.execute(f"CREATE SEQUENCE IF NOT EXISTS {seq} START 1")
 
 
 def downgrade() -> None:
-    Base.metadata.drop_all(bind=op.get_bind())
+    bind = op.get_bind()
+    Base.metadata.drop_all(bind=bind)
+    if bind.dialect.name == "postgresql":
+        for seq in SEQUENCES:
+            op.execute(f"DROP SEQUENCE IF EXISTS {seq}")
