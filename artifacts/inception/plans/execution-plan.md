@@ -39,7 +39,7 @@ We'll develop this as a single unit (one repository, a FastAPI backend and a Rea
 - [ ] NFR Requirements — `design:nfr_requirements` — optional — NFRs already captured in the specification
 - [ ] NFR Design — `design:nfr_design` — optional — covered by architecture (transactions, RBAC)
 - [ ] Infrastructure Design — `design:infrastructure_design` — optional — local Docker Compose only; no cloud infrastructure
-- [x] Figma Designs — `design:figma_designs` — optional — not requested
+- [ ] Figma Designs — `design:figma_designs` — optional — skipped: Figma Starter plan tool-call limit blocked screen creation; frontend built from functional design and Tailwind UI spec
 
 ### Build
 - [x] Code Generation — `build:code_generation` — required — implement backend, frontend and tests
