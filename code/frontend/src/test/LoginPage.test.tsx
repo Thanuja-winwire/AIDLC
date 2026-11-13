@@ -20,7 +20,10 @@ describe("LoginPage", () => {
   });
 
   it("shows the server error on failure", async () => {
-    login.mockImplementation(() => Promise.reject(new Error("Invalid email or password")));
+    // Thenable, not a real Promise: vitest's mock result tracking can otherwise flag the rejection as unhandled.
+    login.mockImplementation(() => ({
+      then: (_ok: unknown, fail: (e: unknown) => void) => fail(new Error("Invalid email or password")),
+    }));
     const { container } = render(<MemoryRouter><LoginPage /></MemoryRouter>);
     fireEvent.change(screen.getByLabelText("Email"), { target: { value: "a@b.co" } });
     fireEvent.change(screen.getByLabelText("Password"), { target: { value: "bad" } });
@@ -29,7 +32,6 @@ describe("LoginPage", () => {
       const alert = await screen.findByRole("alert");
       expect(alert).toHaveTextContent("Invalid email or password");
     } catch (e) {
-      // DIAGNOSTICS
       console.log("DIAG login calls:", JSON.stringify(login.mock.calls));
       console.log("DIAG DOM:", container.innerHTML);
       throw e;
