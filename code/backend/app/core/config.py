@@ -7,10 +7,10 @@ class Settings(BaseSettings):
     database_url: str = "postgresql+psycopg2://inventory:inventory@localhost:5432/inventory"
     jwt_secret: str = "dev-only-secret-change-me"
     jwt_algorithm: str = "HS256"
-    access_token_minutes: int = 60
+    jwt_expire_minutes: int = 60
+    cors_origins: str = "http://localhost:5173"
     default_admin_email: str = "admin@example.com"
     default_admin_password: str = "ChangeMe123!"
-    cors_origins: str = "http://localhost:5173"
 
     @property
     def cors_origin_list(self) -> list[str]:
