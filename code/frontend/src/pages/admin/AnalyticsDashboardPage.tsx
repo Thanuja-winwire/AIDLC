@@ -68,7 +68,7 @@ export default function AnalyticsDashboardPage() {
                   <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
                   <XAxis dataKey="period" tick={{ fontSize: 11 }} stroke="#94a3b8" />
                   <YAxis tick={{ fontSize: 11 }} stroke="#94a3b8" tickFormatter={(v) => `$${v}`} />
-                  <Tooltip formatter={(v: number) => formatMoney(v)} />
+                  <Tooltip formatter={(v) => formatMoney(Number(v))} />
                   <Bar dataKey="revenue" fill="#4f46e5" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
