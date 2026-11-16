@@ -1,34 +1,34 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuites name="vitest tests" tests="10" failures="0" errors="0" time="1.65">
-    <testsuite name="src/auth/guards.test.tsx" timestamp="2026-11-16T10:37:08.438Z" hostname="runnervmccnms" tests="3" failures="0" errors="0" skipped="0" time="0.037899888">
-        <testcase classname="src/auth/guards.test.tsx" name="RequireAuth &gt; redirects anonymous users to login" time="0.032637913">
+<testsuites name="vitest tests" tests="10" failures="0" errors="0" time="1.275">
+    <testsuite name="src/auth/guards.test.tsx" timestamp="2026-11-16T10:47:40.064Z" hostname="runnervmccnms" tests="3" failures="0" errors="0" skipped="0" time="0.023921533">
+        <testcase classname="src/auth/guards.test.tsx" name="RequireAuth &gt; redirects anonymous users to login" time="0.02028712">
             <system-err>
 ⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.
 ⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.
 
             </system-err>
         </testcase>
-        <testcase classname="src/auth/guards.test.tsx" name="RequireAuth &gt; redirects customers away from admin" time="0.002333392">
+        <testcase classname="src/auth/guards.test.tsx" name="RequireAuth &gt; redirects customers away from admin" time="0.001624946">
         </testcase>
-        <testcase classname="src/auth/guards.test.tsx" name="RequireAuth &gt; lets admins in" time="0.001537295">
-        </testcase>
-    </testsuite>
-    <testsuite name="src/lib/format.test.ts" timestamp="2026-11-16T10:37:08.439Z" hostname="runnervmccnms" tests="4" failures="0" errors="0" skipped="0" time="0.018677932">
-        <testcase classname="src/lib/format.test.ts" name="format &gt; formats money" time="0.016582862">
-        </testcase>
-        <testcase classname="src/lib/format.test.ts" name="format &gt; formats percent" time="0.000225674">
-        </testcase>
-        <testcase classname="src/lib/format.test.ts" name="format &gt; labels status" time="0.000238923">
-        </testcase>
-        <testcase classname="src/lib/format.test.ts" name="format &gt; never returns negative days" time="0.000272994">
+        <testcase classname="src/auth/guards.test.tsx" name="RequireAuth &gt; lets admins in" time="0.001174746">
         </testcase>
     </testsuite>
-    <testsuite name="src/lib/validation.test.ts" timestamp="2026-11-16T10:37:08.440Z" hostname="runnervmccnms" tests="3" failures="0" errors="0" skipped="0" time="0.003662488">
-        <testcase classname="src/lib/validation.test.ts" name="validation &gt; accepts valid test card and rejects bad Luhn" time="0.001347503">
+    <testsuite name="src/lib/format.test.ts" timestamp="2026-11-16T10:47:40.065Z" hostname="runnervmccnms" tests="4" failures="0" errors="0" skipped="0" time="0.017999708">
+        <testcase classname="src/lib/format.test.ts" name="format &gt; formats money" time="0.015382703">
         </testcase>
-        <testcase classname="src/lib/validation.test.ts" name="validation &gt; validates card fields" time="0.000609512">
+        <testcase classname="src/lib/format.test.ts" name="format &gt; formats percent" time="0.000193562">
         </testcase>
-        <testcase classname="src/lib/validation.test.ts" name="validation &gt; validates registration" time="0.000482153">
+        <testcase classname="src/lib/format.test.ts" name="format &gt; labels status" time="0.000178079">
+        </testcase>
+        <testcase classname="src/lib/format.test.ts" name="format &gt; never returns negative days" time="0.000183698">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/lib/validation.test.ts" timestamp="2026-11-16T10:47:40.065Z" hostname="runnervmccnms" tests="3" failures="0" errors="0" skipped="0" time="0.002876116">
+        <testcase classname="src/lib/validation.test.ts" name="validation &gt; accepts valid test card and rejects bad Luhn" time="0.001008424">
+        </testcase>
+        <testcase classname="src/lib/validation.test.ts" name="validation &gt; validates card fields" time="0.000469941">
+        </testcase>
+        <testcase classname="src/lib/validation.test.ts" name="validation &gt; validates registration" time="0.000382999">
         </testcase>
     </testsuite>
 </testsuites>

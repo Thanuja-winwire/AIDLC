@@ -1,0 +1,1 @@
+src/components/AppShell.tsx(35,32): error TS2322: Type 'unknown' is not assignable to type 'boolean | undefined'.
