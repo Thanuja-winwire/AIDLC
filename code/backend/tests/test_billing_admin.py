@@ -7,6 +7,11 @@ def _sub(client, headers, plan, card=GOOD_CARD):
     assert r.status_code == 201, r.text
 
 
+def _sub_declined(client, headers, plan):
+    r = client.post("/subscriptions", json={"plan_id": plan, "card": DECLINED_CARD}, headers=headers)
+    assert r.status_code == 402, r.text
+
+
 def test_customer_payments_are_own_only(client, customer, register, plan_id):
     _sub(client, customer, plan_id("Basic"))
     other = register("other@example.com")
@@ -47,12 +52,12 @@ def test_admin_customers_search(client, customer, register, admin, plan_id):
     register("zed@example.com")
     allc = client.get("/admin/customers", headers=admin).json()
     assert allc["total"] == 2
-    found = client.get("/admin/customers?q=casey", headers=admin).json()
+    found = client.get("/admin/customers?q=casey@example.com", headers=admin).json()
     assert found["total"] == 1 and found["items"][0]["subscription"]["plan"]["name"] == "Pro"
 
 
 def test_admin_invoices_payments_filters(client, customer, admin, plan_id):
-    _sub(client, customer, plan_id("Basic"), DECLINED_CARD)
+    _sub_declined(client, customer, plan_id("Basic"))
     _sub(client, customer, plan_id("Basic"))
     inv = client.get("/admin/invoices?status=failed", headers=admin).json()
     assert inv["total"] == 1 and inv["items"][0]["customer_email"] == "casey@example.com"
@@ -89,5 +94,5 @@ def test_analytics(client, customer, register, admin, plan_id):
 
 
 def test_analytics_counts_failed_payments(client, customer, admin, plan_id):
-    _sub(client, customer, plan_id("Basic"), DECLINED_CARD)
+    _sub_declined(client, customer, plan_id("Basic"))
     assert client.get("/admin/analytics/summary", headers=admin).json()["failed_payments"] == 1

@@ -29,11 +29,11 @@ def _current(client, headers):
 
 def test_scheduler_renews_due_subscription(client, customer, plan_id):
     _sub(client, customer, plan_id("Basic"))
-    old_end = _current(client, customer)["current_period_end"]
     make_due()
+    due_end = _current(client, customer)["current_period_end"]
     assert run_renewals() == 1
     cur = _current(client, customer)
-    assert cur["status"] == "active" and cur["current_period_end"] > old_end
+    assert cur["status"] == "active" and cur["current_period_end"] > due_end
     kinds = [i["type"] for i in client.get("/invoices", headers=customer).json()["items"]]
     assert kinds.count("renewal") == 1
 
