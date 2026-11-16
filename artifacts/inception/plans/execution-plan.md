@@ -40,7 +40,7 @@ We'll develop this in 2 units:
 - [ ] NFR Requirements — `design:nfr_requirements` — optional — NFRs already covered in specs
 - [ ] NFR Design — `design:nfr_design` — optional — standard patterns suffice
 - [ ] Infrastructure Design — `design:infrastructure_design` — optional — local Docker Compose only
-- [x] Figma Designs — `design:figma_designs` — optional — no Figma connector requested
+- [ ] Figma Designs — `design:figma_designs` — optional — skipped by user (Figma call limit reached; UI built from functional design)
 
 ### Build
 - [x] Code Generation — `build:code_generation` — required — generate backend and frontend
