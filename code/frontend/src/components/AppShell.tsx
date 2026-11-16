@@ -1,17 +1,25 @@
 import { NavLink, Outlet } from "react-router-dom";
+import type { ComponentType } from "react";
 import {
   BarChart3, CreditCard, FileText, Layers, LogOut, Receipt, Repeat, Users, Wallet,
 } from "lucide-react";
 import { useAuth } from "../auth/AuthContext";
 
-const customerNav = [
+interface NavItem {
+  to: string;
+  label: string;
+  icon: ComponentType<{ className?: string }>;
+  end?: boolean;
+}
+
+const customerNav: NavItem[] = [
   { to: "/plans", label: "Plans", icon: Layers },
   { to: "/subscription", label: "My subscription", icon: Repeat },
   { to: "/invoices", label: "Invoices", icon: FileText },
   { to: "/payments", label: "Payment history", icon: Receipt },
   { to: "/payment-method", label: "Payment method", icon: CreditCard },
 ];
-const adminNav = [
+const adminNav: NavItem[] = [
   { to: "/admin", label: "Analytics", icon: BarChart3, end: true },
   { to: "/admin/plans", label: "Plans", icon: Layers },
   { to: "/admin/customers", label: "Customers", icon: Users },
@@ -30,9 +38,9 @@ export default function AppShell() {
           <span className="text-base font-semibold">Subscriptions</span>
         </div>
         <nav className="flex gap-1 overflow-x-auto px-3 pb-3 md:flex-col md:pb-0" aria-label="Main">
-          {nav.map(({ to, label, icon: Icon, ...rest }) => (
+          {nav.map(({ to, label, icon: Icon, end }) => (
             <NavLink
-              key={to} to={to} end={"end" in rest ? rest.end : false}
+              key={to} to={to} end={end ?? false}
               data-testid={`nav-${label.toLowerCase().replace(/\s+/g, "-")}`}
               className={({ isActive }) =>
                 `flex items-center gap-2.5 whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium transition ${
