@@ -3,13 +3,13 @@
 Scope: component hierarchy, screen flows, form validation, API integration points and styling approach for the React SPA, built on approved specs.md, stories.md, app-architecture.md and the backend functional design.
 
 ## Steps
-- [ ] Step 1: Define route map and component hierarchy
-- [ ] Step 2: Define state and data-fetching approach per screen
-- [ ] Step 3: Define user interaction flows (subscribe, change plan with preview, renew, cancel, payment method)
-- [ ] Step 4: Define form validation rules
-- [ ] Step 5: Map each screen to backend endpoints
-- [ ] Step 6: Choose styling approach and designed empty/loading/error states
-- [ ] Step 7: Write frontend-components.md, business-logic-model.md, business-rules.md, domain-entities.md
+- [x] Step 1: Define route map and component hierarchy
+- [x] Step 2: Define state and data-fetching approach per screen
+- [x] Step 3: Define user interaction flows (subscribe, change plan with preview, renew, cancel, payment method)
+- [x] Step 4: Define form validation rules
+- [x] Step 5: Map each screen to backend endpoints
+- [x] Step 6: Choose styling approach and designed empty/loading/error states
+- [x] Step 7: Write frontend-components.md, business-logic-model.md, business-rules.md, domain-entities.md
 
 ## Questions
 
