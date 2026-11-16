@@ -38,7 +38,7 @@ All JSON. Money is a string with 2 decimals. Errors: `{ "error": { code, message
 `card` = `{number, expiry, cvc, name?}`. These two endpoints were added to the design during planning: `change-preview` and `invoices/{id}/pdf`.
 
 ## Steps
-- [ ] **Step 1 — Foundation**: project config, settings, database session, security (bcrypt/JWT), error handling, SQLAlchemy models, Pydantic schemas, the simulated gateway, Alembic migration, seed data, Dockerfile and env example. Unit tests for the gateway.
+- [x] **Step 1 — Foundation**: project config, settings, database session, security (bcrypt/JWT), error handling, SQLAlchemy models, Pydantic schemas, the simulated gateway, Alembic migration, seed data, Dockerfile and env example. Unit tests for the gateway.
 - [ ] **Step 2 — Business logic and API**: auth, plans, billing (invoices, payments, payment method, PDF), subscription service (subscribe, change plan with preview, renew, cancel), analytics, admin service, the renewal scheduler, routers and `main.py`. Unit and API tests for auth, subscriptions, scheduler, billing and admin.
 - [ ] **Step 3 — Documentation and deployment**: root `docker-compose.yml`, `.gitignore`, README and the unit summary.
 
