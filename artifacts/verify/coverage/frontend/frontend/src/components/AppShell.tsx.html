@@ -125,7 +125,23 @@
 <a name='L60'></a><a href='#L60'>60</a>
 <a name='L61'></a><a href='#L61'>61</a>
 <a name='L62'></a><a href='#L62'>62</a>
-<a name='L63'></a><a href='#L63'>63</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<a name='L63'></a><a href='#L63'>63</a>
+<a name='L64'></a><a href='#L64'>64</a>
+<a name='L65'></a><a href='#L65'>65</a>
+<a name='L66'></a><a href='#L66'>66</a>
+<a name='L67'></a><a href='#L67'>67</a>
+<a name='L68'></a><a href='#L68'>68</a>
+<a name='L69'></a><a href='#L69'>69</a>
+<a name='L70'></a><a href='#L70'>70</a>
+<a name='L71'></a><a href='#L71'>71</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -188,19 +204,27 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" >import { NavLink, Outlet } from "react-router-dom";</span></span></span>
+import type { ComponentType } from "react";
 import {
   BarChart3, CreditCard, FileText, Layers, LogOut, Receipt, Repeat, Users, Wallet,
 } from "lucide-react";
 import { useAuth } from "../auth/AuthContext";
 &nbsp;
-<span class="cstat-no" title="statement not covered" >const customerNav = [</span>
+interface NavItem {
+  to: string;
+  label: string;
+  icon: ComponentType&lt;{ className?: string }&gt;;
+  end?: boolean;
+}
+&nbsp;
+<span class="cstat-no" title="statement not covered" >const customerNav: NavItem[] = [</span>
 <span class="cstat-no" title="statement not covered" >  { to: "/plans", label: "Plans", icon: Layers },</span>
 <span class="cstat-no" title="statement not covered" >  { to: "/subscription", label: "My subscription", icon: Repeat },</span>
 <span class="cstat-no" title="statement not covered" >  { to: "/invoices", label: "Invoices", icon: FileText },</span>
 <span class="cstat-no" title="statement not covered" >  { to: "/payments", label: "Payment history", icon: Receipt },</span>
 <span class="cstat-no" title="statement not covered" >  { to: "/payment-method", label: "Payment method", icon: CreditCard },</span>
 <span class="cstat-no" title="statement not covered" >];</span>
-<span class="cstat-no" title="statement not covered" >const adminNav = [</span>
+<span class="cstat-no" title="statement not covered" >const adminNav: NavItem[] = [</span>
 <span class="cstat-no" title="statement not covered" >  { to: "/admin", label: "Analytics", icon: BarChart3, end: true },</span>
 <span class="cstat-no" title="statement not covered" >  { to: "/admin/plans", label: "Plans", icon: Layers },</span>
 <span class="cstat-no" title="statement not covered" >  { to: "/admin/customers", label: "Customers", icon: Users },</span>
@@ -219,9 +243,9 @@ import { useAuth } from "../auth/AuthContext";
 <span class="cstat-no" title="statement not covered" >          &lt;span className="text-base font-semibold"&gt;Subscriptions&lt;/span&gt;</span>
 <span class="cstat-no" title="statement not covered" >        &lt;/div&gt;</span>
 <span class="cstat-no" title="statement not covered" >        &lt;nav className="flex gap-1 overflow-x-auto px-3 pb-3 md:flex-col md:pb-0" aria-label="Main"&gt;</span>
-<span class="cstat-no" title="statement not covered" >          {nav.map(({ to, label, icon: Icon, ...rest }) =&gt; (</span>
+<span class="cstat-no" title="statement not covered" >          {nav.map(({ to, label, icon: Icon, end }) =&gt; (</span>
 <span class="cstat-no" title="statement not covered" >            &lt;NavLink</span>
-<span class="cstat-no" title="statement not covered" >              key={to} to={to} end={"end" in rest ? rest.end : false}</span>
+<span class="cstat-no" title="statement not covered" >              key={to} to={to} end={end ?? false}</span>
 <span class="cstat-no" title="statement not covered" >              data-testid={`nav-${label.toLowerCase().replace(/\s+/g, "-")}`}</span>
 <span class="cstat-no" title="statement not covered" >              className={({ isActive }) =&gt;</span>
 <span class="cstat-no" title="statement not covered" >                `flex items-center gap-2.5 whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium transition ${</span>
@@ -256,7 +280,7 @@ import { useAuth } from "../auth/AuthContext";
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-11-16T10:50:21.800Z
+                at 2026-11-16T10:53:39.721Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

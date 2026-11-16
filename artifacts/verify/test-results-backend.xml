@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="4" skipped="0" tests="51" time="39.740" timestamp="2026-11-16T10:52:56.617211+00:00" hostname="runnervmccnms"><testcase classname="tests.test_auth" name="test_register_login_me" time="0.897" /><testcase classname="tests.test_auth" name="test_duplicate_email_conflicts" time="0.564" /><testcase classname="tests.test_auth" name="test_short_password_rejected" time="0.288" /><testcase classname="tests.test_auth" name="test_login_failure_is_generic" time="1.111" /><testcase classname="tests.test_auth" name="test_requires_token" time="0.295" /><testcase classname="tests.test_auth" name="test_admin_routes_forbidden_for_customer" time="1.203" /><testcase classname="tests.test_auth" name="test_plans_lists_seeded_active_only" time="1.136" /><testcase classname="tests.test_billing_admin" name="test_customer_payments_are_own_only" time="1.459" /><testcase classname="tests.test_billing_admin" name="test_admin_plan_crud" time="0.600" /><testcase classname="tests.test_billing_admin" name="test_negative_price_rejected" time="0.564" /><testcase classname="tests.test_billing_admin" name="test_deactivated_plan_cannot_be_subscribed" time="1.130" /><testcase classname="tests.test_billing_admin" name="test_admin_customers_search" time="1.703"><failure message="assert (2 == 1)">client = &lt;starlette.testclient.TestClient object at 0x7099c7470ed0&gt;
+customer = {'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyIiwicm9sZSI6ImN1c3RvbWVyIiwiZXhwIjoxNzk0ODI5OTg2fQ.xESgFxF6q1TH1GhLYjHRNNZPyFTBHhBUWo9iXDFMIa0'}
+register = &lt;function register.&lt;locals&gt;._register at 0x7099c5395c60&gt;
+admin = {'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwicm9sZSI6ImFkbWluIiwiZXhwIjoxNzk0ODI5OTg3fQ.VYkvEbwlYnu8p-TtH9yMh5HaSzthJgVC8hHEebCDLds'}
+plan_id = &lt;function plan_id.&lt;locals&gt;._find at 0x7099c5396520&gt;
+
+    def test_admin_customers_search(client, customer, register, admin, plan_id):
+        _sub(client, customer, plan_id("Pro"))
+        register("zed@example.com")
+        allc = client.get("/admin/customers", headers=admin).json()
+        assert allc["total"] == 2
+        found = client.get("/admin/customers?q=casey", headers=admin).json()
+&gt;       assert found["total"] == 1 and found["items"][0]["subscription"]["plan"]["name"] == "Pro"
+E       assert (2 == 1)
+
+tests/test_billing_admin.py:51: AssertionError</failure></testcase><testcase classname="tests.test_billing_admin" name="test_admin_invoices_payments_filters" time="1.129"><failure message="AssertionError: {&quot;error&quot;:{&quot;code&quot;:&quot;payment_failed&quot;,&quot;message&quot;:&quot;Payment failed: card_declined&quot;,&quot;details&quot;:{&quot;reason&quot;:&quot;card_declined&quot;}}}&#10;assert 402 == 201&#10; +  where 402 = &lt;Response [402 Payment Required]&gt;.status_code">client = &lt;starlette.testclient.TestClient object at 0x7099c7543e50&gt;
+customer = {'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyIiwicm9sZSI6ImN1c3RvbWVyIiwiZXhwIjoxNzk0ODI5OTg4fQ.3-MP1DBh3rZphOF-iNMAEylcEgWPJmyq1PYe7JuYq5o'}
+admin = {'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwicm9sZSI6ImFkbWluIiwiZXhwIjoxNzk0ODI5OTg4fQ.UbDdlQ0GnBTrOw3V0jRvS2ZEoq6H7jv3dQFHegRspG4'}
+plan_id = &lt;function plan_id.&lt;locals&gt;._find at 0x7099c5322ac0&gt;
+
+    def test_admin_invoices_payments_filters(client, customer, admin, plan_id):
+&gt;       _sub(client, customer, plan_id("Basic"), DECLINED_CARD)
+
+tests/test_billing_admin.py:55: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+client = &lt;starlette.testclient.TestClient object at 0x7099c7543e50&gt;
+headers = {'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyIiwicm9sZSI6ImN1c3RvbWVyIiwiZXhwIjoxNzk0ODI5OTg4fQ.3-MP1DBh3rZphOF-iNMAEylcEgWPJmyq1PYe7JuYq5o'}
+plan = 1, card = {'number': '4000000000000002', 'expiry': '12/40', 'cvc': '123'}
+
+    def _sub(client, headers, plan, card=GOOD_CARD):
+        r = client.post("/subscriptions", json={"plan_id": plan, "card": card}, headers=headers)
+&gt;       assert r.status_code == 201, r.text
+E       AssertionError: {"error":{"code":"payment_failed","message":"Payment failed: card_declined","details":{"reason":"card_declined"}}}
+E       assert 402 == 201
+E        +  where 402 = &lt;Response [402 Payment Required]&gt;.status_code
+
+tests/test_billing_admin.py:7: AssertionError</failure></testcase><testcase classname="tests.test_billing_admin" name="test_admin_renew_trigger" time="1.162" /><testcase classname="tests.test_billing_admin" name="test_analytics" time="1.739" /><testcase classname="tests.test_billing_admin" name="test_analytics_counts_failed_payments" time="1.125"><failure message="AssertionError: {&quot;error&quot;:{&quot;code&quot;:&quot;payment_failed&quot;,&quot;message&quot;:&quot;Payment failed: card_declined&quot;,&quot;details&quot;:{&quot;reason&quot;:&quot;card_declined&quot;}}}&#10;assert 402 == 201&#10; +  where 402 = &lt;Response [402 Payment Required]&gt;.status_code">client = &lt;starlette.testclient.TestClient object at 0x7099c52466d0&gt;
+customer = {'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyIiwicm9sZSI6ImN1c3RvbWVyIiwiZXhwIjoxNzk0ODI5OTkyfQ.Ytq7x8D_nu4dDyLJj2LuaIcWhfcX_xaDWu8ZGJRgkYg'}
+admin = {'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwicm9sZSI6ImFkbWluIiwiZXhwIjoxNzk0ODI5OTkyfQ.YRtDoAMcYdqNMFnyOO8RT7_tJyeFYUZVvoI_sdcnZ_o'}
+plan_id = &lt;function plan_id.&lt;locals&gt;._find at 0x7099c526f6a0&gt;
+
+    def test_analytics_counts_failed_payments(client, customer, admin, plan_id):
+&gt;       _sub(client, customer, plan_id("Basic"), DECLINED_CARD)
+
+tests/test_billing_admin.py:92: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+client = &lt;starlette.testclient.TestClient object at 0x7099c52466d0&gt;
+headers = {'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyIiwicm9sZSI6ImN1c3RvbWVyIiwiZXhwIjoxNzk0ODI5OTkyfQ.Ytq7x8D_nu4dDyLJj2LuaIcWhfcX_xaDWu8ZGJRgkYg'}
+plan = 1, card = {'number': '4000000000000002', 'expiry': '12/40', 'cvc': '123'}
+
+    def _sub(client, headers, plan, card=GOOD_CARD):
+        r = client.post("/subscriptions", json={"plan_id": plan, "card": card}, headers=headers)
+&gt;       assert r.status_code == 201, r.text
+E       AssertionError: {"error":{"code":"payment_failed","message":"Payment failed: card_declined","details":{"reason":"card_declined"}}}
+E       assert 402 == 201
+E        +  where 402 = &lt;Response [402 Payment Required]&gt;.status_code
+
+tests/test_billing_admin.py:7: AssertionError</failure></testcase><testcase classname="tests.test_gateway" name="test_luhn" time="0.280" /><testcase classname="tests.test_gateway" name="test_tokenize_valid_visa" time="0.280" /><testcase classname="tests.test_gateway" name="test_brands" time="0.280" /><testcase classname="tests.test_gateway" name="test_tokenize_rejects_invalid[1234-12/30-123-card.number]" time="0.281" /><testcase classname="tests.test_gateway" name="test_tokenize_rejects_invalid[4242424242424241-12/30-123-card.number]" time="0.281" /><testcase classname="tests.test_gateway" name="test_tokenize_rejects_invalid[4242424242424242-01/20-123-card.expiry]" time="0.281" /><testcase classname="tests.test_gateway" name="test_tokenize_rejects_invalid[4242424242424242-13/30-123-card.expiry]" time="0.281" /><testcase classname="tests.test_gateway" name="test_tokenize_rejects_invalid[4242424242424242-abc-123-card.expiry]" time="0.281" /><testcase classname="tests.test_gateway" name="test_tokenize_rejects_invalid[4242424242424242-12/30-12-card.cvc]" time="0.280" /><testcase classname="tests.test_gateway" name="test_charge_success_has_reference" time="0.280" /><testcase classname="tests.test_gateway" name="test_test_cards_fail[4000000000000002-card_declined]" time="0.281" /><testcase classname="tests.test_gateway" name="test_test_cards_fail[4000000000009995-insufficient_funds]" time="0.280" /><testcase classname="tests.test_gateway" name="test_invalid_token_fails" time="0.280" /><testcase classname="tests.test_scheduler" name="test_scheduler_renews_due_subscription" time="0.877"><failure message="AssertionError: assert ('active' == 'active'&#10;  &#10;    active and '2026-12-15T10:53:17.527442Z' &gt; '2026-12-16T10:53:17.511653Z')">client = &lt;starlette.testclient.TestClient object at 0x7099c5222690&gt;
+customer = {'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyIiwicm9sZSI6ImN1c3RvbWVyIiwiZXhwIjoxNzk0ODI5OTk3fQ.H8OJTJoQgiE62AZxnDF_rJtG9kG3l80tON4-ndconxc'}
+plan_id = &lt;function plan_id.&lt;locals&gt;._find at 0x7099c529ff60&gt;
+
+    def test_scheduler_renews_due_subscription(client, customer, plan_id):
+        _sub(client, customer, plan_id("Basic"))
+        old_end = _current(client, customer)["current_period_end"]
+        make_due()
+        assert run_renewals() == 1
+        cur = _current(client, customer)
+&gt;       assert cur["status"] == "active" and cur["current_period_end"] &gt; old_end
+E       AssertionError: assert ('active' == 'active'
+E         
+E           active and '2026-12-15T10:53:17.527442Z' &gt; '2026-12-16T10:53:17.511653Z')
+
+tests/test_scheduler.py:36: AssertionError</failure></testcase><testcase classname="tests.test_scheduler" name="test_scheduler_is_idempotent" time="0.876" /><testcase classname="tests.test_scheduler" name="test_failed_renewal_goes_past_due_then_expires" time="0.907" /><testcase classname="tests.test_scheduler" name="test_recover_from_past_due_with_new_card" time="0.904" /><testcase classname="tests.test_scheduler" name="test_manual_renew_failure_returns_402" time="0.874" /><testcase classname="tests.test_scheduler" name="test_manual_renew_not_due_conflicts" time="0.858" /><testcase classname="tests.test_scheduler" name="test_cancel_at_period_end_not_charged_on_renewal" time="0.881" /><testcase classname="tests.test_scheduler" name="test_renewal_uses_price_at_subscription" time="1.148" /><testcase classname="tests.test_scheduler" name="test_gateway_import_for_scheduler" time="0.280" /><testcase classname="tests.test_subscriptions" name="test_subscribe_success_creates_invoice_and_payment" time="0.875" /><testcase classname="tests.test_subscriptions" name="test_subscribe_declined_leaves_nothing_active" time="0.894" /><testcase classname="tests.test_subscriptions" name="test_cannot_subscribe_twice" time="0.864" /><testcase classname="tests.test_subscriptions" name="test_invalid_card_rejected" time="0.862" /><testcase classname="tests.test_subscriptions" name="test_upgrade_prorates_and_charges" time="0.889" /><testcase classname="tests.test_subscriptions" name="test_downgrade_is_free_and_keeps_period" time="0.883" /><testcase classname="tests.test_subscriptions" name="test_interval_change_charges_full_price_and_restarts_cycle" time="0.880" /><testcase classname="tests.test_subscriptions" name="test_same_plan_change_conflicts" time="0.867" /><testcase classname="tests.test_subscriptions" name="test_failed_upgrade_keeps_plan" time="0.885" /><testcase classname="tests.test_subscriptions" name="test_cancel_at_period_end_then_undo" time="0.877" /><testcase classname="tests.test_subscriptions" name="test_cancel_immediately" time="0.872" /><testcase classname="tests.test_subscriptions" name="test_invoice_pdf_and_isolation" time="1.436" /><testcase classname="tests.test_subscriptions" name="test_expired_period_helper_moves_dates" time="0.280" /></testsuite></testsuites>
