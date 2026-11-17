@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="13" time="0.493" timestamp="2026-11-17T12:46:57.838750+00:00" hostname="runnervmccnms"><testcase classname="tests.test_search_dashboard" name="test_search_fields_case_insensitive" time="0.060" /><testcase classname="tests.test_search_dashboard" name="test_search_blank_means_all_and_wildcards_literal" time="0.035" /><testcase classname="tests.test_search_dashboard" name="test_dashboard_empty" time="0.008" /><testcase classname="tests.test_search_dashboard" name="test_dashboard_groups_courses" time="0.023" /><testcase classname="tests.test_students_api" name="test_create_and_get" time="0.021" /><testcase classname="tests.test_students_api" name="test_validation_errors" time="0.010" /><testcase classname="tests.test_students_api" name="test_invalid_formats" time="0.008" /><testcase classname="tests.test_students_api" name="test_future_date_allowed" time="0.007" /><testcase classname="tests.test_students_api" name="test_duplicate_email_case_insensitive" time="0.021" /><testcase classname="tests.test_students_api" name="test_update_own_email_ok_and_duplicate_rejected" time="0.033"><failure message="AssertionError: assert '2026-11-17T12:46:58.148531' == '2026-11-17T12:46:58.148531Z'&#10;  &#10;  - 2026-11-17T12:46:58.148531Z&#10;  ?                           -&#10;  + 2026-11-17T12:46:58.148531">client = &lt;starlette.testclient.TestClient object at 0x773635e8c350&gt;
+
+    def test_update_own_email_ok_and_duplicate_rejected(client):
+        a = client.post("/api/students", json=make_student()).json()
+        b = client.post("/api/students", json=make_student(email="b@example.com")).json()
+        ok = client.put(f"/api/students/{a['id']}", json=make_student(name="New Name"))
+        assert ok.status_code == 200
+        assert ok.json()["name"] == "New Name"
+&gt;       assert ok.json()["created_at"] == a["created_at"]
+E       AssertionError: assert '2026-11-17T12:46:58.148531' == '2026-11-17T12:46:58.148531Z'
+E         
+E         - 2026-11-17T12:46:58.148531Z
+E         ?                           -
+E         + 2026-11-17T12:46:58.148531
+
+tests/test_students_api.py:55: AssertionError</failure></testcase><testcase classname="tests.test_students_api" name="test_update_unknown_404" time="0.006" /><testcase classname="tests.test_students_api" name="test_delete" time="0.018" /><testcase classname="tests.test_students_api" name="test_list_newest_first" time="0.014" /></testsuite></testsuites>

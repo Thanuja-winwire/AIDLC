@@ -5,11 +5,11 @@
   "branch": "master",
   "dashboard_url": "https://sonarcloud.io/dashboard?id=thanuja-ai-dlc_aidlc-student-management-131bd142&branch=master",
   "analysis": {
-    "ce_task_id": "AaHpiihItCkJUjKdqoP1",
+    "ce_task_id": "AaHpjG1l-BMVGJBlwar2",
     "status": "SUCCESS",
     "processing_seconds": 0.5,
-    "analysis_id": "23afa6fe-422e-497c-b0ac-dfc86b44f29e",
-    "executed_at": "2026-11-17T12:45:09+0000"
+    "analysis_id": "1f54888e-f9b1-4fd9-9edf-9047d30b086d",
+    "executed_at": "2026-11-17T12:47:38+0000"
   },
   "summary": {
     "total_issues": 2,
@@ -22,13 +22,56 @@
     "rule": "FAIL when any issue has BLOCKER/HIGH impact (or legacy BLOCKER/CRITICAL severity)"
   },
   "measures": {
-    "coverage": "0.0",
+    "coverage": "60.4",
     "duplicated_lines_density": "0.0",
-    "ncloc": "1123"
+    "ncloc": "1124"
   },
   "quality_gate": {
-    "status": "NONE",
-    "conditions": []
+    "status": "OK",
+    "conditions": [
+      {
+        "metric": "new_reliability_rating",
+        "comparator": "GT",
+        "threshold": "1",
+        "actual": "1",
+        "status": "OK"
+      },
+      {
+        "metric": "new_security_rating",
+        "comparator": "GT",
+        "threshold": "1",
+        "actual": "1",
+        "status": "OK"
+      },
+      {
+        "metric": "new_maintainability_rating",
+        "comparator": "GT",
+        "threshold": "1",
+        "actual": "1",
+        "status": "OK"
+      },
+      {
+        "metric": "new_coverage",
+        "comparator": "LT",
+        "threshold": "80",
+        "actual": "100.0",
+        "status": "OK"
+      },
+      {
+        "metric": "new_duplicated_lines_density",
+        "comparator": "GT",
+        "threshold": "3",
+        "actual": "0.0",
+        "status": "OK"
+      },
+      {
+        "metric": "new_security_hotspots_reviewed",
+        "comparator": "LT",
+        "threshold": "100",
+        "actual": "100.0",
+        "status": "OK"
+      }
+    ]
   },
   "files": [
     {
@@ -74,12 +117,12 @@
     "python:S8786": {
       "name": "Regular expressions should not cause non-linear backtracking",
       "language": "py",
-      "description": "[root_cause]\nRegular expression engines use backtracking to try all possible execution paths when evaluating a pattern against an input. In some cases, this\nleads to non-linear backtracking where the worst-case evaluation time grows polynomially (e.g., O(n\u00b2) or O(n\u00b3)) with the input size. While not as\nsevere as catastrophic backtracking, such patterns can significantly degrade application performance when processing large or untrusted inputs.\n\nThis rule reports regular expressions that exhibit non-linear backtracking behavior.\n\n[how_to_fix]\nTo fix a regular expression with non-linear backtracking, consider the following strategies:\n\n  Replace . with negated character classes to exclude separators where applicable (e.g., \n  instead of . before ,).\n\n  Use bounded quantifiers such as {1,5} to limit repetitions.\n\n  Restructure alternations and quantifiers to eliminate ambiguity \u2014 avoid patterns where multiple alternatives can match the same character.\n\n  Use possessive quantifiers and atomic grouping (available since Python 3.11) to prevent the regex engine from keeping backtracking\n  positions.\n\nThe following examples illustrate two distinct causes of non-linear backtracking. The first shows a pattern that is polynomial when unanchored:\nwithout a start anchor, the engine retries the pattern at every position, leading to quadratic evaluation time when there is no match. The second\nshows ambiguous alternation, which causes quadratic backtracking regardless of anchoring because multiple alternatives can match the same input in\ndifferent ways.\n\nNoncompliant code example\n\nimport re\n\nre.search(r\"a+b\", text)  # Noncompliant - polynomial backtracking when the pattern does not match\n\nimport re\n\nre.search(r\"(a|aa)+\", text)  # Noncompliant - ambiguous alternation causes quadratic backtracking\n\nCompliant solution\n\nAdding a start anchor prevents the engine from retrying at every position:\n\nimport re\n\nre.search(r\"^a+b\", text)  # Compliant - anchor eliminates redundant backtracking positions\n\nRestructuring the alternation to eliminate the overlap removes the quadratic behavior:\n\nimport re\n\nre.search(r\"a+\", text)  # Compliant - unambiguous\n\n[resources]\nArticles & blog posts\n\n  owasp.org - Regular expression Denial of\n  Service - ReDoS\n\n  regular-expressions.info - Runaway Regular Expressions: Catastrophic\n  Backtracking\n\nRelated rules\n\n  S5852 - Regular expressions should not cause catastrophic backtracking\n\n[introduction]\nRegular expression engines rely on backtracking to evaluate patterns against input. Certain regex patterns lead to non-linear backtracking, where\nthe evaluation time grows polynomially with input size."
+      "description": "[introduction]\nRegular expression engines rely on backtracking to evaluate patterns against input. Certain regex patterns lead to non-linear backtracking, where\nthe evaluation time grows polynomially with input size.\n\n[how_to_fix]\nTo fix a regular expression with non-linear backtracking, consider the following strategies:\n\n  Replace . with negated character classes to exclude separators where applicable (e.g., \n  instead of . before ,).\n\n  Use bounded quantifiers such as {1,5} to limit repetitions.\n\n  Restructure alternations and quantifiers to eliminate ambiguity \u2014 avoid patterns where multiple alternatives can match the same character.\n\n  Use possessive quantifiers and atomic grouping (available since Python 3.11) to prevent the regex engine from keeping backtracking\n  positions.\n\nThe following examples illustrate two distinct causes of non-linear backtracking. The first shows a pattern that is polynomial when unanchored:\nwithout a start anchor, the engine retries the pattern at every position, leading to quadratic evaluation time when there is no match. The second\nshows ambiguous alternation, which causes quadratic backtracking regardless of anchoring because multiple alternatives can match the same input in\ndifferent ways.\n\nNoncompliant code example\n\nimport re\n\nre.search(r\"a+b\", text)  # Noncompliant - polynomial backtracking when the pattern does not match\n\nimport re\n\nre.search(r\"(a|aa)+\", text)  # Noncompliant - ambiguous alternation causes quadratic backtracking\n\nCompliant solution\n\nAdding a start anchor prevents the engine from retrying at every position:\n\nimport re\n\nre.search(r\"^a+b\", text)  # Compliant - anchor eliminates redundant backtracking positions\n\nRestructuring the alternation to eliminate the overlap removes the quadratic behavior:\n\nimport re\n\nre.search(r\"a+\", text)  # Compliant - unambiguous\n\n[root_cause]\nRegular expression engines use backtracking to try all possible execution paths when evaluating a pattern against an input. In some cases, this\nleads to non-linear backtracking where the worst-case evaluation time grows polynomially (e.g., O(n\u00b2) or O(n\u00b3)) with the input size. While not as\nsevere as catastrophic backtracking, such patterns can significantly degrade application performance when processing large or untrusted inputs.\n\nThis rule reports regular expressions that exhibit non-linear backtracking behavior.\n\n[resources]\nArticles & blog posts\n\n  owasp.org - Regular expression Denial of\n  Service - ReDoS\n\n  regular-expressions.info - Runaway Regular Expressions: Catastrophic\n  Backtracking\n\nRelated rules\n\n  S5852 - Regular expressions should not cause catastrophic backtracking"
     },
     "typescript:S8786": {
       "name": "Regular expressions should not cause non-linear backtracking",
       "language": "ts",
-      "description": "[introduction]\nRegular expression engines rely on backtracking to evaluate patterns against input. Certain regex patterns lead to non-linear backtracking, where\nthe evaluation time grows polynomially with input size.\n\n[resources]\nArticles & blog posts\n\n  owasp.org - Regular expression Denial of\n  Service - ReDoS\n\n  regular-expressions.info - Runaway Regular Expressions: Catastrophic\n  Backtracking\n\nRelated rules\n\n  S5852 - Regular expressions should not cause catastrophic backtracking\n\n[how_to_fix]\nTo fix a regular expression with non-linear backtracking, consider the following strategies:\n\n  Replace . with negated character classes to exclude separators where applicable (e.g., [^,]* instead of\n  .* before ,).\n\n  Use bounded quantifiers such as {1,5} to limit repetitions.\n\n  Restructure alternations and quantifiers to eliminate ambiguity \u2014 avoid patterns where multiple alternatives can match the same character.\n\n  JavaScript does not support possessive quantifiers, but atomic grouping can be emulated using lookahead assertions and backreferences.\n\n  Use a non-backtracking implementation such as node-re2.\n\nThe following examples illustrate two distinct causes of non-linear backtracking. The first shows a pattern that is polynomial when unanchored:\nwithout a start anchor, the engine retries the pattern at every position, leading to quadratic evaluation time when there is no match. The second\nshows ambiguous alternation, which causes quadratic backtracking regardless of anchoring because multiple alternatives can match the same input in\ndifferent ways.\n\nNoncompliant code example\n\n/a+b/.test(input); // Noncompliant - polynomial backtracking when the pattern does not match\n\n/(a|aa)+/.test(input); // Noncompliant - ambiguous alternation causes quadratic backtracking\n\nCompliant solution\n\nAdding a start anchor prevents the engine from retrying at every position:\n\n/^a+b/.test(input); // Compliant - anchor eliminates redundant backtracking positions\n\nRestructuring the alternation to eliminate the overlap removes the quadratic behavior:\n\n/a+/.test(input); // Compliant - unambiguous\n\n[root_cause]\nRegular expression engines use backtracking to try all possible execution paths when evaluating a pattern against an input. In some cases, this\nleads to non-linear backtracking where the worst-case evaluation time grows polynomially (e.g., O(n\u00b2) or O(n\u00b3)) with the input size. While not as\nsevere as catastrophic backtracking, such patterns can significantly degrade application performance when processing large or untrusted inputs.\n\nThis rule reports regular expressions that exhibit non-linear backtracking behavior."
+      "description": "[root_cause]\nRegular expression engines use backtracking to try all possible execution paths when evaluating a pattern against an input. In some cases, this\nleads to non-linear backtracking where the worst-case evaluation time grows polynomially (e.g., O(n\u00b2) or O(n\u00b3)) with the input size. While not as\nsevere as catastrophic backtracking, such patterns can significantly degrade application performance when processing large or untrusted inputs.\n\nThis rule reports regular expressions that exhibit non-linear backtracking behavior.\n\n[introduction]\nRegular expression engines rely on backtracking to evaluate patterns against input. Certain regex patterns lead to non-linear backtracking, where\nthe evaluation time grows polynomially with input size.\n\n[resources]\nArticles & blog posts\n\n  owasp.org - Regular expression Denial of\n  Service - ReDoS\n\n  regular-expressions.info - Runaway Regular Expressions: Catastrophic\n  Backtracking\n\nRelated rules\n\n  S5852 - Regular expressions should not cause catastrophic backtracking\n\n[how_to_fix]\nTo fix a regular expression with non-linear backtracking, consider the following strategies:\n\n  Replace . with negated character classes to exclude separators where applicable (e.g., [^,]* instead of\n  .* before ,).\n\n  Use bounded quantifiers such as {1,5} to limit repetitions.\n\n  Restructure alternations and quantifiers to eliminate ambiguity \u2014 avoid patterns where multiple alternatives can match the same character.\n\n  JavaScript does not support possessive quantifiers, but atomic grouping can be emulated using lookahead assertions and backreferences.\n\n  Use a non-backtracking implementation such as node-re2.\n\nThe following examples illustrate two distinct causes of non-linear backtracking. The first shows a pattern that is polynomial when unanchored:\nwithout a start anchor, the engine retries the pattern at every position, leading to quadratic evaluation time when there is no match. The second\nshows ambiguous alternation, which causes quadratic backtracking regardless of anchoring because multiple alternatives can match the same input in\ndifferent ways.\n\nNoncompliant code example\n\n/a+b/.test(input); // Noncompliant - polynomial backtracking when the pattern does not match\n\n/(a|aa)+/.test(input); // Noncompliant - ambiguous alternation causes quadratic backtracking\n\nCompliant solution\n\nAdding a start anchor prevents the engine from retrying at every position:\n\n/^a+b/.test(input); // Compliant - anchor eliminates redundant backtracking positions\n\nRestructuring the alternation to eliminate the overlap removes the quadratic behavior:\n\n/a+/.test(input); // Compliant - unambiguous"
     }
   }
 }
