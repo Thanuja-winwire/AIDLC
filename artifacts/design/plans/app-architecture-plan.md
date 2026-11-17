@@ -4,12 +4,12 @@
 Single-user Task Management app: FastAPI + SQLite backend, React frontend. Covers FR-1 to FR-7 (specs.md) and stories US-1 to US-7 (stories.md). Depth: minimal.
 
 ## Plan Checklist
-- [ ] Generate components.md
-- [ ] Generate component-methods.md
-- [ ] Generate services.md
-- [ ] Generate component-dependency.md
-- [ ] Generate app-architecture.md (consolidated)
-- [ ] Validate design completeness and consistency
+- [x] Generate components.md
+- [x] Generate component-methods.md
+- [x] Generate services.md
+- [x] Generate component-dependency.md
+- [x] Generate app-architecture.md (consolidated)
+- [x] Validate design completeness and consistency
 
 ## Questions
 
