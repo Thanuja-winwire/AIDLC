@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites name="vitest tests" tests="5" failures="0" errors="0" time="0.225">
+    <testsuite name="src/validation.test.ts" timestamp="2026-11-17T12:49:08.442Z" hostname="ip-10-0-128-195" tests="5" failures="0" errors="0" skipped="0" time="0.003">
+        <testcase classname="src/validation.test.ts" name="validateStudent &gt; accepts a valid student" time="0.002">
+        </testcase>
+        <testcase classname="src/validation.test.ts" name="validateStudent &gt; requires all fields" time="0">
+        </testcase>
+        <testcase classname="src/validation.test.ts" name="validateStudent &gt; rejects bad email and phone" time="0">
+        </testcase>
+        <testcase classname="src/validation.test.ts" name="validateStudent &gt; enforces phone digit count" time="0">
+        </testcase>
+        <testcase classname="src/validation.test.ts" name="validateStudent &gt; enforces max lengths" time="0">
+        </testcase>
+    </testsuite>
+</testsuites>
