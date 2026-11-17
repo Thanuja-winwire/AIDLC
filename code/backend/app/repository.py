@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from datetime import datetime, timezone
 
 from sqlalchemy import func, or_, select
@@ -41,7 +43,7 @@ class StudentRepository:
                 )
             )
         stmt = stmt.order_by(Student.created_at.desc(), Student.id.desc())
-        return list(self.db.execute(stmt).scalars().all())
+        return [s for s in self.db.execute(stmt).scalars().all()]
 
     def add(self, student: Student) -> Student:
         self.db.add(student)
@@ -64,7 +66,7 @@ class StudentRepository:
 
     def courses_in_creation_order(self) -> list[str]:
         stmt = select(Student.course).order_by(Student.created_at.asc(), Student.id.asc())
-        return list(self.db.execute(stmt).scalars().all())
+        return [c for c in self.db.execute(stmt).scalars().all()]
 
     def _commit(self) -> None:
         try:
