@@ -1,0 +1,65 @@
+{
+  "status": "OK",
+  "project_key": "thanuja-ai-dlc_aidlc-task-manager-e1c21211",
+  "organization": "thanuja-ai-dlc",
+  "branch": "master",
+  "dashboard_url": "https://sonarcloud.io/dashboard?id=thanuja-ai-dlc_aidlc-task-manager-e1c21211&branch=master",
+  "analysis": {
+    "ce_task_id": "AaHopBr-uUWaKV8HN951",
+    "status": "SUCCESS",
+    "processing_seconds": 0.4,
+    "analysis_id": "e1ef78b0-e656-47bf-840d-331c5b85f7ea",
+    "executed_at": "2026-11-17T08:33:52+0000"
+  },
+  "summary": {
+    "total_issues": 1,
+    "exported_issues": 1,
+    "by_severity": {
+      "MEDIUM": 1
+    },
+    "must_fix": 0,
+    "verdict": "PASS",
+    "rule": "FAIL when any issue has BLOCKER/HIGH impact (or legacy BLOCKER/CRITICAL severity)"
+  },
+  "measures": {
+    "coverage": "25.1",
+    "duplicated_lines_density": "0.0",
+    "ncloc": "877"
+  },
+  "quality_gate": {
+    "status": "NONE",
+    "conditions": []
+  },
+  "files": [
+    {
+      "path": "frontend/src/components/TaskFormModal.jsx",
+      "issues": [
+        {
+          "line": 60,
+          "rule": "javascript:S6848",
+          "severity": "MEDIUM",
+          "impacts": [
+            {
+              "quality": "RELIABILITY",
+              "severity": "MEDIUM"
+            },
+            {
+              "quality": "MAINTAINABILITY",
+              "severity": "LOW"
+            }
+          ],
+          "must_fix": false,
+          "message": "Avoid non-native interactive elements. If using native HTML is not possible, add an appropriate role and support for tabbing, mouse, keyboard, and touch inputs to an interactive content element.",
+          "effort": "5min"
+        }
+      ]
+    }
+  ],
+  "rules": {
+    "javascript:S6848": {
+      "name": "Non-interactive DOM elements should not have an interactive handler",
+      "language": "js",
+      "description": "[how_to_fix]\nThe simplest and most recommended way is to replace the non-interactive elements with interactive ones. If for some reason you can\u2019t replace the\nnon-interactive element, you can add an interactive role attribute to it and manually manage its keyboard event handlers and focus.\nCommon interactive roles include button, link, checkbox, menuitem, menuitemcheckbox,\nmenuitemradio, option, radio, searchbox, switch, and textbox.\n\nNoncompliant code example\n\n<div onClick={() => {}} />; // Noncompliant\n\nCompliant solution\n\n<div onClick={() => {}} role=\"button\" />;\n\n[resources]\nDocumentation\n\n  eslint-plugin-jsx-a11y - Rule no-static-element-interactions\n\n  W3C - WCAG 2.2 - 4.1.2 Name, Role, Value\n\n  W3C - ARIA4: Using a WAI-ARIA role to expose the role of a user interface\n  component\n\n  MDN web docs - WAI-ARIA Roles\n\n[root_cause]\nNon-interactive DOM elements are HTML elements that are not designed to be interacted with by the user, for instance <div>,\n<span>, and <footer>, etc. They are typically used to structure content and do not have built-in interactivity\nor keyboard accessibility.\n\nInteractive handlers, on the other hand, are event handlers that respond to user interactions. These include handlers like onClick,\nonKeyDown, onMouseUp, and more. When these handlers are added to an HTML element, they make the element respond to the\nspecified user interaction.\n\nWhen non-interactive elements have interactive handlers, it can lead to several problems:\n\n  Unexpected behavior: Non-interactive elements are not designed to be interactive, so adding interactive handlers can cause unexpected behavior.\n  For example, non-interactive elements do not naturally receive keyboard focus, so keyboard users might not be able to activate the handler.\n\n  Confusing for assistive technologies: Assistive technologies might not announce non-interactive elements with interactive handlers correctly.\n  This can make it difficult for users to understand how to interact with the content.\n\n  Violation of HTML standards: Using interactive handlers on non-interactive elements can be seen as a misuse of HTML, as it goes against the\n  intended use of these elements.\n\nBy enforcing that interactive handlers are only used on interactive elements, this rule helps create a more predictable and user-friendly\nexperience for all users, and ensures that web content adheres to accessibility standards and best practices."
+    }
+  }
+}

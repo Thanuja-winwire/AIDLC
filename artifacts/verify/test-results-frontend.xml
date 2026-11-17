@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites name="vitest tests" tests="6" failures="0" errors="0" time="0.223">
+    <testsuite name="src/api/client.test.js" timestamp="2026-11-17T08:33:13.002Z" hostname="runnervmccnms" tests="6" failures="0" errors="0" skipped="0" time="0.005">
+        <testcase classname="src/api/client.test.js" name="buildQuery &gt; returns empty string with no filters" time="0.001">
+        </testcase>
+        <testcase classname="src/api/client.test.js" name="buildQuery &gt; combines status and priority" time="0">
+        </testcase>
+        <testcase classname="src/api/client.test.js" name="api &gt; posts a new task" time="0.001">
+        </testcase>
+        <testcase classname="src/api/client.test.js" name="api &gt; maps 422 details to field errors" time="0.001">
+        </testcase>
+        <testcase classname="src/api/client.test.js" name="api &gt; returns null on 204" time="0">
+        </testcase>
+        <testcase classname="src/api/client.test.js" name="api &gt; wraps network failures" time="0">
+        </testcase>
+    </testsuite>
+</testsuites>
