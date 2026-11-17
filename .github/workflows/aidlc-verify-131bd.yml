@@ -1,0 +1,169 @@
+name: aidlc-verify
+
+on:
+  push:
+    branches: ['aidlc/student_management']
+    paths: ['artifacts/verify/.aidlc-run-verify']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install backend dependencies
+        run: pip install -r code/backend/requirements.txt pytest-cov
+
+      - name: Backend import / compile check
+        working-directory: code/backend
+        run: python -c "import app.main"
+
+      - name: Install frontend dependencies
+        working-directory: code/frontend
+        run: |
+          npm install
+          npm install --no-save @vitest/coverage-v8@^1.5.0
+
+      - name: Frontend typecheck and build
+        working-directory: code/frontend
+        run: npm run build
+
+      - name: Run backend tests with coverage
+        working-directory: code/backend
+        run: |
+          mkdir -p ${{ github.workspace }}/artifacts/verify/coverage/backend
+          pytest -v \
+            --cov=app \
+            --cov-report=term \
+            --cov-report=xml:${{ github.workspace }}/artifacts/verify/coverage/backend/coverage.xml \
+            --cov-report=json:${{ github.workspace }}/artifacts/verify/coverage/backend/coverage.json \
+            --cov-report=html:${{ github.workspace }}/artifacts/verify/coverage/backend/html \
+            --junitxml=${{ github.workspace }}/artifacts/verify/test-results.xml
+
+      - name: Run frontend tests with coverage
+        working-directory: code/frontend
+        run: |
+          mkdir -p ${{ github.workspace }}/artifacts/verify/coverage/frontend
+          npx vitest run \
+            --reporter=default --reporter=junit \
+            --outputFile.junit=${{ github.workspace }}/artifacts/verify/test-results-frontend.xml \
+            --coverage.enabled \
+            --coverage.provider=v8 \
+            --coverage.include=src \
+            --coverage.reportsDirectory=${{ github.workspace }}/artifacts/verify/coverage/frontend \
+            --coverage.reporter=text --coverage.reporter=json --coverage.reporter=json-summary --coverage.reporter=lcov --coverage.reporter=html
+
+      - name: Live backend smoke test (real create, read, duplicate, update, search, dashboard, delete)
+        working-directory: code/backend
+        run: |
+          set -euo pipefail
+          uvicorn app.main:app --port 8000 > "${{ runner.temp }}/uvicorn.log" 2>&1 &
+          SERVER_PID=$!
+          trap 'kill $SERVER_PID || true' EXIT
+          for i in $(seq 1 30); do
+            curl -fsS localhost:8000/api/health && break
+            sleep 1
+          done
+          echo
+          H='Content-Type: application/json'
+          expect() { # expected_code actual_code label
+            echo "$3 -> HTTP $2 (expected $1)"
+            [ "$1" = "$2" ] || { echo "FAILED: $3"; cat "${{ runner.temp }}/uvicorn.log"; exit 1; }
+          }
+          BODY='{"name":"Asha Rao","email":"asha@example.com","phone":"+91 98765 43210","course":"CS","enrollment_date":"2024-06-01"}'
+          code=$(curl -sS -o "${{ runner.temp }}/r.json" -w '%{http_code}' -X POST localhost:8000/api/students -H "$H" -d "$BODY")
+          expect 201 "$code" "create student"; cat "${{ runner.temp }}/r.json"; echo
+          ID=$(python3 -c "import json;print(json.load(open('${{ runner.temp }}/r.json'))['id'])")
+          code=$(curl -sS -o /dev/null -w '%{http_code}' -X POST localhost:8000/api/students -H "$H" -d "$BODY")
+          expect 409 "$code" "duplicate email"
+          code=$(curl -sS -o /dev/null -w '%{http_code}' localhost:8000/api/students/$ID)
+          expect 200 "$code" "get student"
+          code=$(curl -sS -o "${{ runner.temp }}/list.json" -w '%{http_code}' "localhost:8000/api/students?q=asha")
+          expect 200 "$code" "search"; cat "${{ runner.temp }}/list.json"; echo
+          grep -qi "asha" "${{ runner.temp }}/list.json"
+          UPD='{"name":"Asha R","email":"asha@example.com","phone":"+91 98765 43210","course":"CS","enrollment_date":"2024-06-01"}'
+          code=$(curl -sS -o /dev/null -w '%{http_code}' -X PUT localhost:8000/api/students/$ID -H "$H" -d "$UPD")
+          expect 200 "$code" "update student"
+          code=$(curl -sS -o "${{ runner.temp }}/dash.json" -w '%{http_code}' localhost:8000/api/dashboard)
+          expect 200 "$code" "dashboard"; cat "${{ runner.temp }}/dash.json"; echo
+          code=$(curl -sS -o /dev/null -w '%{http_code}' -X DELETE localhost:8000/api/students/$ID)
+          expect 204 "$code" "delete student"
+          code=$(curl -sS -o /dev/null -w '%{http_code}' localhost:8000/api/students/$ID)
+          expect 404 "$code" "get deleted student"
+
+      - name: SonarQube - create project (if missing)
+        if: ${{ !cancelled() }}
+        continue-on-error: true
+        env:
+          SONAR_TOKEN: ${{ secrets.AIDLC_SONAR_TOKEN_131BD }}
+          SONAR_HOST_URL: ${{ vars.AIDLC_SONAR_HOST_URL_131BD }}
+          SONAR_ORG: ${{ vars.AIDLC_SONAR_ORG_131BD }}
+          SONAR_PROJECT_KEY: ${{ vars.AIDLC_SONAR_PROJECT_KEY_131BD }}
+        run: |
+          code=$(curl -sS -o "${{ runner.temp }}/sonar-create.json" -w "%{http_code}" -X POST \
+            -H "Authorization: Bearer $SONAR_TOKEN" \
+            --data-urlencode "organization=$SONAR_ORG" \
+            --data-urlencode "project=$SONAR_PROJECT_KEY" \
+            --data-urlencode "name=$SONAR_PROJECT_KEY" \
+            --data-urlencode "visibility=private" \
+            "$SONAR_HOST_URL/api/projects/create")
+          echo "api/projects/create -> HTTP $code"; cat "${{ runner.temp }}/sonar-create.json"; echo
+
+      - name: SonarQube - scan
+        if: ${{ !cancelled() }}
+        continue-on-error: true
+        working-directory: code
+        env:
+          SONAR_TOKEN: ${{ secrets.AIDLC_SONAR_TOKEN_131BD }}
+          SONAR_HOST_URL: ${{ vars.AIDLC_SONAR_HOST_URL_131BD }}
+          SONAR_ORG: ${{ vars.AIDLC_SONAR_ORG_131BD }}
+          SONAR_PROJECT_KEY: ${{ vars.AIDLC_SONAR_PROJECT_KEY_131BD }}
+          SONAR_BRANCH_MODE: ${{ vars.AIDLC_SONAR_BRANCH_MODE_131BD }}
+        run: |
+          MAIN=$(python3 "${{ github.workspace }}/artifacts/verify/sonar/sonar-export.py" --scan-branch || true)
+          npx --yes @sonar/scan@5.0.2 \
+            -Dsonar.host.url="$SONAR_HOST_URL" \
+            -Dsonar.organization="$SONAR_ORG" \
+            -Dsonar.projectKey="$SONAR_PROJECT_KEY" \
+            -Dsonar.sources=backend/app,frontend/src \
+            -Dsonar.tests=backend/tests,frontend/src \
+            -Dsonar.exclusions="**/node_modules/**,**/dist/**,**/build/**,**/coverage/**,**/*.test.*,**/*.spec.*,**/tests/**" \
+            -Dsonar.test.inclusions="**/*.test.*,**/*.spec.*,backend/tests/**" \
+            -Dsonar.python.version=3.11 \
+            -Dsonar.python.coverage.reportPaths=${{ github.workspace }}/artifacts/verify/coverage/backend/coverage.xml \
+            -Dsonar.javascript.lcov.reportPaths=${{ github.workspace }}/artifacts/verify/coverage/frontend/lcov.info \
+            ${MAIN:+-Dsonar.branch.name="$MAIN"}
+
+      - name: SonarQube - export results
+        if: ${{ !cancelled() }}
+        continue-on-error: true
+        env:
+          SONAR_TOKEN: ${{ secrets.AIDLC_SONAR_TOKEN_131BD }}
+          SONAR_HOST_URL: ${{ vars.AIDLC_SONAR_HOST_URL_131BD }}
+          SONAR_ORG: ${{ vars.AIDLC_SONAR_ORG_131BD }}
+        run: |
+          python3 artifacts/verify/sonar/sonar-export.py \
+            --report-task "${{ github.workspace }}" \
+            --out artifacts/verify/sonar/sonar-issues.json
+
+      - name: Commit coverage artifacts back to branch
+        if: ${{ !cancelled() }}
+        continue-on-error: true
+        run: |
+          git config user.email "aidlc-ci@pipeline"
+          git config user.name "AIDLC CI"
+          git add artifacts/verify/
+          git commit -m "ci: publish verify artifacts [skip ci]" || echo "Nothing to commit"
+          git push origin "HEAD:${{ github.ref_name }}"
