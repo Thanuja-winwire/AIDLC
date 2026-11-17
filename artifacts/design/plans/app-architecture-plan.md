@@ -1,14 +1,14 @@
 # Application Architecture Plan
 
-**Scope**: Student Management app, single unit `student-management` (FastAPI/Flask backend + React frontend, SQLite). Covers FR-1 to FR-6 and US-1 to US-6.
+**Scope**: Student Management app, single unit `student-management` (FastAPI backend + React frontend, SQLite). Covers FR-1 to FR-6 and US-1 to US-6.
 
 ## Plan Steps
-- [ ] Generate components.md
-- [ ] Generate component-methods.md
-- [ ] Generate services.md
-- [ ] Generate component-dependency.md
-- [ ] Generate app-architecture.md (consolidated)
-- [ ] Validate design completeness and consistency
+- [x] Generate components.md
+- [x] Generate component-methods.md
+- [x] Generate services.md
+- [x] Generate component-dependency.md
+- [x] Generate app-architecture.md (consolidated)
+- [x] Validate design completeness and consistency
 
 ## Questions
 
