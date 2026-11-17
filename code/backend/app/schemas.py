@@ -1,5 +1,5 @@
 import re
-from datetime import date, datetime
+from datetime import date, datetime, timezone
 from typing import Any
 
 from pydantic import BaseModel, ConfigDict, field_validator
@@ -98,6 +98,14 @@ class StudentOut(BaseModel):
     enrollment_date: date
     created_at: datetime
     updated_at: datetime
+
+    @field_validator("created_at", "updated_at", mode="after")
+    @classmethod
+    def _utc(cls, v: datetime) -> datetime:
+        # SQLite drops tzinfo; values are always stored as UTC.
+        if v.tzinfo is None:
+            return v.replace(tzinfo=timezone.utc)
+        return v.astimezone(timezone.utc)
 
 
 class CourseCount(BaseModel):
