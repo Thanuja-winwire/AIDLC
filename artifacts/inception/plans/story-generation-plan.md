@@ -47,8 +47,8 @@ C) Other (please describe after [Answer]: tag below)
 [Answer]: A) One persona: the single task-owner user (Recommended)
 
 ## Execution Checklist
-- [ ] Generate `personas.md` with the agreed persona(s)
-- [ ] Generate `stories.md` using heading format `### US-<n>: <title> (<FR ids>)` (no persona names in titles)
-- [ ] Ensure stories meet INVEST criteria
-- [ ] Add acceptance criteria to each story in the agreed format
-- [ ] Map personas to stories and cover FR-1..FR-7
+- [x] Generate `personas.md` with the agreed persona(s)
+- [x] Generate `stories.md` using heading format `### US-<n>: <title> (<FR ids>)` (no persona names in titles)
+- [x] Ensure stories meet INVEST criteria
+- [x] Add acceptance criteria to each story in the agreed format
+- [x] Map personas to stories and cover FR-1..FR-7
